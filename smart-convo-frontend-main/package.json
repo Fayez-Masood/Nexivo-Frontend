@@ -45,6 +45,8 @@
     "@reactour/tour": "^3.8.0",
     "@vnedyalk0v/react19-simple-maps": "^1.2.1",
     "autoprefixer": "^10.4.20",
+    "postcss": "^8.5",
+    "tailwindcss": "^3.4.17",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
@@ -100,9 +102,7 @@
     "@vitest/browser": "^3.2.4",
     "@vitest/coverage-v8": "^3.2.4",
     "playwright": "^1.55.1",
-    "postcss": "^8.5",
     "storybook": "^9.1.8",
-    "tailwindcss": "^3.4.17",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }

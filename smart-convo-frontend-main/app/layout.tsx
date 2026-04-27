@@ -1,6 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
+import "react-phone-input-2/lib/style.css"
 import { AuthProvider } from "@/components/auth-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { TutorialProvider } from "@/components/tutorial/TutorialProvider";
