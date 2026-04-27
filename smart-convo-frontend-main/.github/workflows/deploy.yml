@@ -1,0 +1,50 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy-dev:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into server and deploy Dev
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: 107.23.136.20
+          username: ubuntu
+          key: ${{ secrets.HOSTINGERSSHKEY }}
+          script: |
+            cd /home/ubuntu/frontend
+            git checkout dev
+            git pull origin dev
+            npm ci --include=dev
+            npm run build
+            sudo systemctl restart frontend.service
+            exit 0
+
+  deploy-main:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into server and deploy Main
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: 98.93.251.56
+          username: ubuntu
+          key: ${{ secrets.PRODKEY }}
+          script: |
+            cd /home/ubuntu/frontend
+            git checkout main
+            git pull origin main
+            npm ci --include=dev
+            npm run build
+            sudo systemctl restart frontend.service
+            exit 0
+
+
+
+
