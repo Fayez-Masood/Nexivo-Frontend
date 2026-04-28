@@ -713,102 +713,130 @@ export function DashboardSidebar() {
 
   return (
     <>
+      {/* Spacer that reserves layout width */}
       <div className={cn(
-        "flex-shrink-0 transition-all duration-300",
+        "flex-shrink-0 transition-all duration-[220ms]",
         isFloating ? "w-0" : (isCollapsed ? "w-[5.5rem]" : "w-[17.5rem]")
-      )}>
+      )} />
+
+      {/* Sidebar panel */}
+      <div
+        ref={dragRef}
+        className={cn(
+          "flex flex-col transition-all duration-[220ms]",
+          isCollapsed ? "w-[4.5rem]" : "w-[17.5rem]",
+          /* light Voxera skin */
+          "bg-[var(--paper)] border-r border-[var(--border-1)]",
+          /* shadow only when floating */
+          isFloating
+            ? "fixed top-4 left-4 h-[calc(100vh-2rem)] z-50 rounded-[var(--radius-2xl)] shadow-xl border border-[var(--border-1)]"
+            : "fixed top-0 left-0 h-screen z-10"
+        )}
+        style={isFloating ? {
+          transform: `translate(${position.x}px, ${position.y}px)`,
+          transition: isDragging ? "none" : "all 0.22s cubic-bezier(0.2,0.7,0.2,1)",
+          cursor: isDragging ? "grabbing" : "default",
+          willChange: isDragging ? "transform" : "auto",
+        } : undefined}
+      >
+        {/* Brand / drag handle */}
         <div
-          ref={dragRef}
           className={cn(
-            isCollapsed ? "w-20" : "w-64",
-            "bg-[#0f1f17] flex flex-col rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] border border-emerald-600/10 transition-all duration-300",
-            isFloating ? "fixed top-4 left-4 h-[calc(100vh-2rem)] z-50" : "fixed top-4 left-4 h-[calc(100vh-2rem)] z-10"
+            "flex items-center justify-between select-none cursor-grab active:cursor-grabbing",
+            isCollapsed ? "px-3 py-5 justify-center" : "px-5 py-5"
           )}
-          style={isFloating ? {
-            transform: `translate(${position.x}px, ${position.y}px)`,
-            transition: isDragging ? "none" : "all 0.3s ease",
-            cursor: isDragging ? "grabbing" : "default",
-            willChange: isDragging ? "transform" : "auto",
-          } : undefined}
+          onMouseDown={handleMouseDown}
         >
-          <div
-            className="p-6 flex items-center justify-between cursor-grab active:cursor-grabbing select-none rounded-t-3xl"
-            onMouseDown={handleMouseDown}
-          >
-            {!isCollapsed && (
-              <div className="flex items-center space-x-3">
+          {!isCollapsed && (
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div
+                className="w-7 h-7 rounded-[var(--radius-xs)] flex items-center justify-center flex-shrink-0"
+                style={{ background: "var(--brand-gradient)" }}
+              >
                 <Image
                   src="/Logo.png"
-                  alt="Smart Convo Logo"
-                  width={36}
-                  height={36}
-                  className="rounded-lg pointer-events-none"
+                  alt="Smart Convo"
+                  width={18}
+                  height={18}
+                  className="rounded pointer-events-none"
                   draggable={false}
                 />
-                <span className="text-xl font-semibold text-white">Smart Convo</span>
               </div>
-            )}
-            {isCollapsed && (
+              <span className="font-sans font-semibold text-[var(--graphite-900)] text-[15px] tracking-[-0.01em] truncate">
+                Smart Convo
+              </span>
+            </div>
+          )}
+          {isCollapsed && (
+            <div
+              className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center flex-shrink-0"
+              style={{ background: "var(--brand-gradient)" }}
+            >
               <Image
                 src="/Logo.png"
-                alt="Smart Convo Logo"
-                width={36}
-                height={36}
-                className="rounded-lg mx-auto pointer-events-none"
+                alt="Smart Convo"
+                width={20}
+                height={20}
+                className="rounded pointer-events-none"
                 draggable={false}
               />
-            )}
+            </div>
+          )}
+          {!isCollapsed && (
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="p-1.5 hover:bg-emerald-600/20 rounded-lg transition-colors"
+              className="ml-1 p-1 rounded-[var(--radius-xs)] text-[var(--graphite-400)] hover:text-[var(--graphite-700)] hover:bg-[var(--graphite-50)] transition-colors duration-150 flex-shrink-0"
             >
               <ChevronRight
-                className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${
-                  isCollapsed ? "" : "rotate-180"
-                }`}
+                className={`w-3.5 h-3.5 transition-transform duration-[220ms] ${isCollapsed ? "" : "rotate-180"}`}
               />
             </button>
-          </div>
+          )}
+        </div>
 
-          <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+        {/* Divider */}
+        <div className="mx-4 h-px bg-[var(--border-1)]" />
+
+        {/* Nav */}
+        <nav className={cn("flex-1 overflow-y-auto py-3", isCollapsed ? "px-2" : "px-3")}>
+          <div className="space-y-0.5">
             {filteredNavigationItems.map((item) => (
               <div key={item.title}>
                 {item.children ? (
                   <div>
                     <button
                       onClick={() => !isCollapsed && toggleExpanded(item.title)}
-                      className={cn(
-                        "w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-lg transition-all duration-200",
-                        "text-slate-400 hover:bg-emerald-600/10 hover:text-white",
-                      )}
                       title={isCollapsed ? item.title : undefined}
+                      className={cn(
+                        "w-full flex items-center justify-between px-3 py-2 text-sm rounded-[var(--radius-sm)] transition-colors duration-150",
+                        "text-[var(--graphite-600)] hover:bg-[var(--graphite-50)] hover:text-[var(--graphite-900)]",
+                      )}
                     >
-                      <div className="flex items-center space-x-3">
-                        <item.icon className="w-5 h-5 flex-shrink-0" />
+                      <div className={cn("flex items-center", isCollapsed ? "justify-center w-full" : "gap-3")}>
+                        <item.icon className="w-[18px] h-[18px] flex-shrink-0" strokeWidth={1.5} />
                         {!isCollapsed && <span className="font-medium">{item.title}</span>}
                       </div>
-                      {!isCollapsed &&
-                        (expandedItems.includes(item.title) ? (
-                          <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                        ) : (
-                          <ChevronRight className="w-4 h-4 flex-shrink-0" />
-                        ))}
+                      {!isCollapsed && (
+                        expandedItems.includes(item.title)
+                          ? <ChevronDown className="w-3.5 h-3.5 flex-shrink-0 text-[var(--graphite-400)]" />
+                          : <ChevronRight className="w-3.5 h-3.5 flex-shrink-0 text-[var(--graphite-400)]" />
+                      )}
                     </button>
                     {!isCollapsed && expandedItems.includes(item.title) && (
-                      <div className="ml-8 mt-1 space-y-1">
+                      <div className="ml-7 mt-0.5 space-y-0.5">
                         {item.children.map((child) => (
                           <Link
                             key={child.href}
                             href={child.href}
                             className={cn(
-                              "flex items-center space-x-3 px-3 py-2 text-sm rounded-lg transition-all duration-200",
+                              "flex items-center gap-2.5 px-3 py-1.5 text-sm rounded-[var(--radius-sm)] transition-colors duration-150",
                               pathname === child.href
-                                ? "bg-emerald-600 text-white"
-                                : "text-slate-400 hover:bg-emerald-600/10 hover:text-white",
+                                ? "bg-[var(--signal-soft)] text-[var(--signal-ink)] font-medium"
+                                : "text-[var(--graphite-600)] hover:bg-[var(--graphite-50)] hover:text-[var(--graphite-900)]",
                             )}
                           >
-                            <child.icon className="w-4 h-4 flex-shrink-0" />
-                            <span className="font-medium">{child.title}</span>
+                            <child.icon className="w-4 h-4 flex-shrink-0" strokeWidth={1.5} />
+                            <span>{child.title}</span>
                           </Link>
                         ))}
                       </div>
@@ -817,31 +845,44 @@ export function DashboardSidebar() {
                 ) : (
                   <Link
                     href={item.href}
-                    className={cn(
-                      item.title === "Agents"
-                        ? "sidebar-agents-link flex items-center space-x-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200"
-                        : "flex items-center space-x-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200",
-                      pathname === item.href
-                        ? "bg-emerald-600 text-white"
-                        : "text-slate-400 hover:bg-emerald-600/10 hover:text-white",
-                    )}
                     title={isCollapsed ? item.title : undefined}
                     onClick={item.title === "Agents" ? handleAgentsClick : undefined}
+                    className={cn(
+                      item.title === "Agents" ? "sidebar-agents-link" : "",
+                      "flex items-center px-3 py-2 text-sm rounded-[var(--radius-sm)] transition-colors duration-150",
+                      isCollapsed ? "justify-center" : "gap-3",
+                      pathname === item.href
+                        ? "bg-[var(--signal-soft)] text-[var(--signal-ink)] font-medium"
+                        : "text-[var(--graphite-600)] hover:bg-[var(--graphite-50)] hover:text-[var(--graphite-900)]",
+                    )}
                   >
-                    <item.icon className="w-5 h-5 flex-shrink-0" />
+                    <item.icon className="w-[18px] h-[18px] flex-shrink-0" strokeWidth={1.5} />
                     {!isCollapsed && <span className="font-medium">{item.title}</span>}
                   </Link>
                 )}
               </div>
             ))}
-          </nav>
+          </div>
+        </nav>
 
-          {!tutorialSteps.includes(-1) && !tutorialSteps.includes(9) && (
-            <div className="p-3 border-t border-emerald-600/20 rounded-b-3xl">
-              <SkipTutorialButton />
-            </div>
-          )}
-        </div>
+        {/* Collapse toggle when sidebar is collapsed */}
+        {isCollapsed && (
+          <div className="px-2 pb-3">
+            <button
+              onClick={() => setIsCollapsed(false)}
+              className="w-full flex items-center justify-center p-2 rounded-[var(--radius-sm)] text-[var(--graphite-400)] hover:text-[var(--graphite-700)] hover:bg-[var(--graphite-50)] transition-colors duration-150"
+            >
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+
+        {/* Tutorial skip */}
+        {!tutorialSteps.includes(-1) && !tutorialSteps.includes(9) && (
+          <div className={cn("border-t border-[var(--border-1)]", isCollapsed ? "px-2 py-3" : "px-4 py-3")}>
+            <SkipTutorialButton />
+          </div>
+        )}
       </div>
     </>
   )

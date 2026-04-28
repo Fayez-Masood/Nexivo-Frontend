@@ -210,7 +210,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Cookies from "js-cookie"
-import { Eye, EyeOff, Building, User } from "lucide-react"
+import { Eye, EyeOff, Building, User, MessageSquare } from "lucide-react"
 import { useAuth } from "@/components/auth-provider"
 import { cn } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
@@ -398,153 +398,177 @@ export default function LoginPage() {
     }
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-      {/* Background Image */}
-      <div
-  className="absolute inset-0 bg-cover bg-center opacity-70"
-  style={{ backgroundImage: 'url("/agent-bg.jpg")' }}
-/>
+    <div className="min-h-screen bg-[var(--canvas)] flex items-center justify-center p-8">
+      <div className="w-full max-w-4xl flex gap-20 items-center">
 
-                            
+        {/* Left Panel — editorial */}
+        <div className="flex-1 hidden md:block">
+          <p className="eyebrow text-[var(--signal)] mb-6 tracking-[0.06em]">
+            AI Customer Support Platform
+          </p>
+          <h1 className="font-display text-[clamp(40px,4.5vw,64px)] font-normal leading-[1.05] tracking-[-0.02em] text-[var(--graphite-900)] mb-6">
+            Customer support,<br />
+            <em>resolved by agents</em><br />
+            that think.
+          </h1>
+          <p className="text-[var(--graphite-500)] text-lg leading-relaxed max-w-[40ch] mb-8">
+            SmartConvo by Pentagon AI — the agentic platform for customer communication at scale.
+          </p>
+          <Link
+            href="/signup"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--graphite-900)] border-b border-[var(--graphite-900)] pb-px hover:border-[var(--signal)] hover:text-[var(--signal)] transition-colors duration-150 no-underline"
+          >
+            Create account →
+          </Link>
+        </div>
 
-      {/* Content */}
-      <div className="relative z-10 flex items-center justify-center h-screen px-8">
-        <div className="w-full max-w-4xl flex gap-12 items-center">
-          {/* Left Panel */}
-          <div className="flex-1 text-gray-900">
-            <h1 className="text-5xl font-bold mb-6 leading-tight">
-  AI VOICE & COMMUNICATION <span className="underline decoration-lime-400">AGENTS</span><br />
-  THAT ANSWER EVERY CALL.<br />
-</h1>
-<p className="text-gray-600 mb-6">
-  SmartConvo by Pentagon AI — The Future of<br />
-  <span className="text-primary">Customer Communication</span>
-</p>
+        {/* Right Panel — login card */}
+        <div className="w-full max-w-[400px] flex-shrink-0">
+          <div className="bg-[var(--paper)] rounded-[var(--radius-2xl)] p-8 border border-[var(--border-1)] shadow-lg">
 
-            
-            <Link href="/signup" className="text-gray-900 font-medium border-b-2 border-gray-900 hover:border-lime-400 transition">
-              Create account →
-            </Link>
-          </div>
+            {/* Brand mark */}
+            <div className="flex items-center gap-2.5 mb-8">
+              <div
+                className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center flex-shrink-0"
+                style={{ background: "var(--brand-gradient)" }}
+              >
+                <MessageSquare className="w-4 h-4 text-white" />
+              </div>
+              <span className="font-sans font-medium text-[var(--graphite-900)] text-[15px] tracking-[-0.01em]">
+                Smart Convo
+              </span>
+            </div>
 
-          {/* Right Panel */}
-          <div className="w-[420px]">
-            <div className="bg-white/90 backdrop-blur-lg rounded-3xl p-8 shadow-2xl">
-              <h2 className="text-2xl font-semibold text-center text-gray-900 mb-6">
-                Login to your account
-              </h2>
+            <h2 className="text-xl font-medium text-[var(--graphite-900)] tracking-[-0.01em] mb-1">
+              Welcome back
+            </h2>
+            <p className="text-[var(--graphite-500)] text-sm mb-6">
+              Sign in to continue to your account.
+            </p>
 
-              {/* Toggle Login Type */}
-              <div className="flex justify-center gap-4 mb-6">
-                <Button
-                  type="button"
-                  onClick={() => setLoginType("company")}
-                  className={cn(
-                    "flex-1 h-10 rounded-full transition",
-                    loginType === "company" ? "bg-black text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  )}
-                >
-                  <Building className="mr-2 h-4 w-4" /> Company
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setLoginType("user")}
-                  className={cn(
-                    "flex-1 h-10 rounded-full transition",
-                    loginType === "user" ? "bg-black text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  )}
-                >
-                  <User className="mr-2 h-4 w-4" /> User
-                </Button>
+            {/* Login type toggle */}
+            <div className="flex gap-1 p-1 bg-[var(--graphite-50)] rounded-[var(--radius-md)] mb-6">
+              <button
+                type="button"
+                onClick={() => setLoginType("company")}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-1.5 h-9 text-sm font-medium rounded-[var(--radius-sm)] transition-all duration-150",
+                  loginType === "company"
+                    ? "bg-[var(--paper)] text-[var(--graphite-900)] shadow-sm border border-[var(--border-1)]"
+                    : "text-[var(--graphite-500)] hover:text-[var(--graphite-700)]"
+                )}
+              >
+                <Building className="h-3.5 w-3.5" /> Company
+              </button>
+              <button
+                type="button"
+                onClick={() => setLoginType("user")}
+                className={cn(
+                  "flex-1 flex items-center justify-center gap-1.5 h-9 text-sm font-medium rounded-[var(--radius-sm)] transition-all duration-150",
+                  loginType === "user"
+                    ? "bg-[var(--paper)] text-[var(--graphite-900)] shadow-sm border border-[var(--border-1)]"
+                    : "text-[var(--graphite-500)] hover:text-[var(--graphite-700)]"
+                )}
+              >
+                <User className="h-3.5 w-3.5" /> User
+              </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-sm font-medium text-[var(--graphite-700)]">
+                  {loginType === "company" ? "Company email" : "User email"}
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="h-11 rounded-[var(--radius-md)] border-[rgba(10,10,10,0.14)] bg-[var(--paper)] text-[var(--graphite-900)] placeholder:text-[var(--graphite-400)]"
+                />
               </div>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="email" className="text-gray-700 text-sm">
-                    {loginType === "company" ? "Company Email" : "User Email"}
-                  </Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="password" className="text-sm font-medium text-[var(--graphite-700)]">
+                  Password
+                </Label>
+                <div className="relative">
                   <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black"
+                    className="h-11 rounded-[var(--radius-md)] border-[rgba(10,10,10,0.14)] bg-[var(--paper)] text-[var(--graphite-900)] pr-10"
                   />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--graphite-400)] hover:text-[var(--graphite-700)] transition-colors duration-150"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
-                <div>
-                  <Label htmlFor="password" className="text-gray-700 text-sm">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 pr-10 focus:ring-2 focus:ring-black"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                  </div>
-                </div>
+              </div>
 
-                <div className="flex items-center justify-between text-sm">
-                  <label className="flex items-center gap-2">
-                    {/* <input type="checkbox" className="w-4 h-4 border-gray-300 rounded" />
-                    Remember me */}
-                  </label>
-                  <Link href="/forgot-password" className="text-gray-500 hover:text-gray-700">
-                    Forgot password?
-                  </Link>
-                </div>
-
-                {!require2FA ? (
-                  <Button type="submit" disabled={isLoading} className="w-full h-11 bg-black hover:bg-gray-800 text-white rounded-xl">
-                    {isLoading ? "Signing in..." : "Sign in"}
-                  </Button>
-                ) : (
-                  <>
-                    <div>
-                      <Label htmlFor="2fa" className="text-gray-700 text-sm">Two-Factor Code</Label>
-                      <Input
-                        id="2fa"
-                        type="text"
-                        maxLength={6}
-                        value={twoFACode}
-                        onChange={(e) => setTwoFACode(e.target.value)}
-                        placeholder="Enter 6-digit code"
-                        className="w-full px-4 py-3 text-center tracking-widest rounded-xl border border-gray-200 focus:ring-2 focus:ring-black"
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      onClick={handle2FAVerification}
-                      disabled={verifying2FA || twoFACode.length !== 6}
-                      className="w-full h-11 bg-black hover:bg-gray-800 text-white rounded-xl"
-                    >
-                      {verifying2FA ? "Verifying..." : "Verify Code"}
-                    </Button>
-                  </>
-                )}
-              </form>
-
-              <div className="mt-6 text-center text-sm text-gray-600">
-                Don’t have an account?{" "}
-                <Link href="/signup" className="text-black font-medium hover:underline">
-                  Sign up
+              <div className="flex justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-[var(--graphite-500)] hover:text-[var(--graphite-700)] transition-colors duration-150 no-underline"
+                >
+                  Forgot password?
                 </Link>
               </div>
-            </div>
+
+              {!require2FA ? (
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full h-11 bg-[var(--ink)] hover:bg-[var(--graphite-800)] text-[var(--fg-on-dark)] rounded-[var(--radius-md)] text-sm font-medium transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? "Signing in..." : "Sign in"}
+                </button>
+              ) : (
+                <>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="2fa" className="text-sm font-medium text-[var(--graphite-700)]">
+                      Two-factor code
+                    </Label>
+                    <Input
+                      id="2fa"
+                      type="text"
+                      maxLength={6}
+                      value={twoFACode}
+                      onChange={(e) => setTwoFACode(e.target.value)}
+                      placeholder="123456"
+                      className="h-11 rounded-[var(--radius-md)] border-[rgba(10,10,10,0.14)] text-center tracking-[0.3em] font-mono text-lg"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handle2FAVerification}
+                    disabled={verifying2FA || twoFACode.length !== 6}
+                    className="w-full h-11 bg-[var(--ink)] hover:bg-[var(--graphite-800)] text-[var(--fg-on-dark)] rounded-[var(--radius-md)] text-sm font-medium transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {verifying2FA ? "Verifying..." : "Verify code"}
+                  </button>
+                </>
+              )}
+            </form>
+
+            <p className="mt-6 text-center text-sm text-[var(--graphite-500)]">
+              Don’t have an account?{" "}
+              <Link href="/signup" className="text-[var(--graphite-900)] font-medium hover:underline">
+                Sign up
+              </Link>
+            </p>
           </div>
         </div>
+
       </div>
     </div>
   )
