@@ -1442,109 +1442,114 @@ export default function SignupPage() {
     }
   }
 
+  /* ── helpers ─────────────────────────────────────────── */
+  const fieldCls = (field: string) =>
+    `h-11 rounded-[var(--radius-md)] border-[rgba(10,10,10,0.14)] bg-[var(--paper)] text-[var(--graphite-900)] placeholder:text-[var(--graphite-400)] transition-colors duration-150 ${
+      errors[field] ? "border-[var(--danger)]" : ""
+    }`
+
+  /* ── success screen ───────────────────────────────────── */
   if (showSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
-        <div className="bg-white/90 backdrop-blur-lg rounded-3xl p-8 shadow-2xl text-center max-w-md">
+      <div className="min-h-screen bg-[var(--canvas)] flex items-center justify-center p-8">
+        <div className="bg-[var(--paper)] rounded-[var(--radius-2xl)] p-10 border border-[var(--border-1)] shadow-lg text-center max-w-md w-full">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-8 h-8 text-green-600" />
+            <div className="w-14 h-14 bg-[var(--success-soft)] rounded-full flex items-center justify-center">
+              <CheckCircle className="w-7 h-7 text-[var(--success)]" />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-slate-800 mb-4">Request Submitted!</h2>
-          <p className="text-slate-600 mb-6">
-            Your company registration request is being processed. You will receive an email confirmation shortly.
+          <h2 className="text-xl font-medium text-[var(--graphite-900)] tracking-[-0.01em] mb-3">
+            Request submitted
+          </h2>
+          <p className="text-[var(--graphite-500)] text-sm leading-relaxed mb-6">
+            Your company registration is being reviewed. You will receive an email confirmation shortly.
           </p>
-          <div className="flex items-center justify-center space-x-2 text-sm text-slate-500">
-            <div className="w-4 h-4 border-2 border-teal-600 border-t-transparent rounded-full animate-spin"></div>
-            <span>Redirecting to login page...</span>
+          <div className="flex items-center justify-center gap-2 text-sm text-[var(--graphite-400)]">
+            <div className="w-3.5 h-3.5 border-2 border-[var(--signal)] border-t-transparent rounded-full animate-spin" />
+            <span>Redirecting to login...</span>
           </div>
         </div>
       </div>
     )
   }
 
+  /* ── main form ────────────────────────────────────────── */
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-      {/* Cinematic Background (public/agent-bg.jpg) */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-70"
-        style={{ backgroundImage: 'url("/agent-bg.jpg")' }}
-      />
+    <div className="min-h-screen bg-[var(--canvas)] flex items-center justify-center p-8">
+      <div className="w-full max-w-6xl flex gap-20 items-start">
 
-      {/* Content */}
-      <div className="relative z-10 flex items-center justify-center h-screen px-8">
-        <div className="w-full max-w-6xl flex gap-12 items-start">
-          {/* Left Panel */}
-          <div className="flex-1 text-gray-900">
-            <h1 className="text-4xl font-bold mb-6 leading-tight uppercase">
-              AI voice & communication <span className="underline decoration-lime-400">agents</span><br />
-              that <span className="underline decoration-lime-400">book every appointment</span>
-            </h1>
-            <p className="text-gray-600 mb-6">
-              Answer every call. Never miss an opportunity.<br />
-              SmartConvo by Pentagon AI — The Future of{" "}
-              <span className="text-primary">Customer Communication</span>
-            </p>
+        {/* Left panel — editorial */}
+        <div className="flex-1 hidden lg:block pt-8">
+          <p className="eyebrow text-[var(--signal)] mb-6 tracking-[0.06em]">
+            AI Customer Support Platform
+          </p>
+          <h1 className="font-display text-[clamp(40px,4vw,60px)] font-normal leading-[1.05] tracking-[-0.02em] text-[var(--graphite-900)] mb-6">
+            Customer support,<br />
+            <em>resolved by agents</em><br />
+            that think.
+          </h1>
+          <p className="text-[var(--graphite-500)] text-lg leading-relaxed max-w-[38ch] mb-8">
+            SmartConvo by Pentagon AI — the agentic platform for customer communication at scale.
+          </p>
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--graphite-900)] border-b border-[var(--graphite-900)] pb-px hover:border-[var(--signal)] hover:text-[var(--signal)] transition-colors duration-150 no-underline"
+          >
+            Already have an account? Sign in →
+          </Link>
+        </div>
 
-            <Link href="/login" className="text-gray-900 font-medium border-b-2 border-gray-900 hover:border-lime-400 transition">
-              Already have an account? Login →
-            </Link>
-          </div>
+        {/* Right panel — form card */}
+        <div className="w-full max-w-[580px] flex-shrink-0">
+          <div className="bg-[var(--paper)] rounded-[var(--radius-2xl)] border border-[var(--border-1)] shadow-lg overflow-hidden">
 
-          {/* Right Panel - Signup Form */}
-          <div className="w-[620px]">
-            <div className="bg-white/90 backdrop-blur-lg rounded-3xl p-8 shadow-2xl max-h-[90vh] overflow-y-auto">
-              <div className="flex items-center justify-center mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg flex items-center justify-center">
-                  <MessageSquare className="w-6 h-6 text-white" />
+            {/* Card header */}
+            <div className="px-8 pt-8 pb-6 border-b border-[var(--border-1)]">
+              <div className="flex items-center gap-2.5 mb-5">
+                <div
+                  className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center flex-shrink-0"
+                  style={{ background: "var(--brand-gradient)" }}
+                >
+                  <MessageSquare className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-2xl font-bold text-slate-800 ml-3">Smart Convo</span>
+                <span className="font-sans font-medium text-[var(--graphite-900)] text-[15px] tracking-[-0.01em]">
+                  Smart Convo
+                </span>
               </div>
-
-              <h2 className="text-2xl font-semibold text-center text-gray-900 mb-4">
-                Register Your Company
+              <h2 className="text-xl font-medium text-[var(--graphite-900)] tracking-[-0.01em] mb-1">
+                Register your company
               </h2>
-              <CardDescription className="text-center text-slate-600 mb-6">
-                Create your company account to get started with SmartConvo
-              </CardDescription>
+              <p className="text-[var(--graphite-500)] text-sm">
+                Create your account to get started with SmartConvo.
+              </p>
+            </div>
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Basic Information */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-slate-800 border-b pb-2">Basic Information</h3>
+            {/* Scrollable form body */}
+            <div className="px-8 py-6 max-h-[65vh] overflow-y-auto space-y-8">
+              <form onSubmit={handleSubmit} className="space-y-8">
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-slate-700">Company Name *</Label>
-                      <Input
-                        id="name"
-                        placeholder="Enter company name"
-                        value={formData.name}
-                        onChange={(e) => handleInputChange("name", e.target.value)}
-                        className={`h-11 transition-all duration-200 ${errors.name ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
-                      />
-                      {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+                {/* ── Basic information ── */}
+                <section className="space-y-4">
+                  <h3 className="eyebrow text-[var(--graphite-500)] border-b border-[var(--border-1)] pb-2">
+                    Basic information
+                  </h3>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="name" className="text-sm font-medium text-[var(--graphite-700)]">Company name *</Label>
+                      <Input id="name" placeholder="Acme Corp" value={formData.name} onChange={(e) => handleInputChange("name", e.target.value)} className={fieldCls("name")} />
+                      {errors.name && <p className="text-xs text-[var(--danger)]">{errors.name}</p>}
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-slate-700">Company Email *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="company@example.com"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
-                        className={`h-11 transition-all duration-200 ${errors.email ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
-                      />
-                      {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+                    <div className="space-y-1.5">
+                      <Label htmlFor="email" className="text-sm font-medium text-[var(--graphite-700)]">Company email *</Label>
+                      <Input id="email" type="email" placeholder="company@example.com" value={formData.email} onChange={(e) => handleInputChange("email", e.target.value)} className={fieldCls("email")} />
+                      {errors.email && <p className="text-xs text-[var(--danger)]">{errors.email}</p>}
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-slate-700">Phone Number *</Label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="phone" className="text-sm font-medium text-[var(--graphite-700)]">Phone number *</Label>
                       <PhoneInput
                         country={"us"}
                         value={formData.phone}
@@ -1552,233 +1557,179 @@ export default function SignupPage() {
                         inputProps={{
                           name: "phone",
                           required: true,
-                          className: `h-11 w-full border px-3 py-2 rounded-md focus:outline-none transition-all duration-200 ${errors.phone ? 'border-red-500 focus:border-red-500' : 'focus:border-teal-500'}`,
+                          className: `h-11 w-full border rounded-[var(--radius-md)] px-3 py-2 text-sm bg-[var(--paper)] text-[var(--graphite-900)] focus:outline-none transition-colors duration-150 ${errors.phone ? "border-[var(--danger)]" : "border-[rgba(10,10,10,0.14)]"}`,
                         }}
                         containerClass="w-full"
                       />
-                      {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
+                      {errors.phone && <p className="text-xs text-[var(--danger)]">{errors.phone}</p>}
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="website" className="text-slate-700">Website</Label>
-                      <Input
-                        id="website"
-                        placeholder="www.company.com"
-                        value={formData.website}
-                        onChange={(e) => handleInputChange("website", e.target.value)}
-                        className={`h-11 transition-all duration-200 ${errors.website ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
-                      />
-                      {errors.website && <p className="text-sm text-red-500">{errors.website}</p>}
+                    <div className="space-y-1.5">
+                      <Label htmlFor="website" className="text-sm font-medium text-[var(--graphite-700)]">Website</Label>
+                      <Input id="website" placeholder="www.company.com" value={formData.website} onChange={(e) => handleInputChange("website", e.target.value)} className={fieldCls("website")} />
+                      {errors.website && <p className="text-xs text-[var(--danger)]">{errors.website}</p>}
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="description" className="text-slate-700">Company Description *</Label>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="description" className="text-sm font-medium text-[var(--graphite-700)]">Company description *</Label>
                     <Textarea
                       id="description"
                       placeholder="Tell us about your company..."
                       value={formData.description}
                       onChange={(e) => handleInputChange("description", e.target.value)}
-                      className={`min-h-[100px] transition-all duration-200 ${errors.description ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
+                      className={`min-h-[88px] rounded-[var(--radius-md)] border-[rgba(10,10,10,0.14)] bg-[var(--paper)] text-[var(--graphite-900)] placeholder:text-[var(--graphite-400)] transition-colors duration-150 ${errors.description ? "border-[var(--danger)]" : ""}`}
                     />
-                    {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
+                    {errors.description && <p className="text-xs text-[var(--danger)]">{errors.description}</p>}
                   </div>
-                </div>
+                </section>
 
-                {/* Passwords */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className="text-slate-700">Password *</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="Enter a strong password"
-                      value={formData.password}
-                      onChange={(e) => handleInputChange("password", e.target.value)}
-                      className={`h-11 transition-all duration-200 ${errors.password ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
-                    />
-                    {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
+                {/* ── Security ── */}
+                <section className="space-y-4">
+                  <h3 className="eyebrow text-[var(--graphite-500)] border-b border-[var(--border-1)] pb-2">
+                    Security
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="password" className="text-sm font-medium text-[var(--graphite-700)]">Password *</Label>
+                      <Input id="password" type="password" placeholder="Min 8 chars, 1 uppercase, 1 digit" value={formData.password} onChange={(e) => handleInputChange("password", e.target.value)} className={fieldCls("password")} />
+                      {errors.password && <p className="text-xs text-[var(--danger)]">{errors.password}</p>}
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="confirmPassword" className="text-sm font-medium text-[var(--graphite-700)]">Confirm password *</Label>
+                      <Input id="confirmPassword" type="password" placeholder="Re-enter password" value={formData.confirmPassword} onChange={(e) => handleInputChange("confirmPassword", e.target.value)} className={fieldCls("confirmPassword")} />
+                      {errors.confirmPassword && <p className="text-xs text-[var(--danger)]">{errors.confirmPassword}</p>}
+                    </div>
                   </div>
+                </section>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword" className="text-slate-700">Confirm Password *</Label>
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      placeholder="Re-enter password"
-                      value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                      className={`h-11 transition-all duration-200 ${errors.confirmPassword ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
-                    />
-                    {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword}</p>}
-                  </div>
-                </div>
-
-                {/* Address Information */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-slate-800 border-b pb-2">Address Information</h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="country" className="text-slate-700">Country *</Label>
+                {/* ── Address ── */}
+                <section className="space-y-4">
+                  <h3 className="eyebrow text-[var(--graphite-500)] border-b border-[var(--border-1)] pb-2">
+                    Address
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="country" className="text-sm font-medium text-[var(--graphite-700)]">Country *</Label>
                       <Select value={formData.country} onValueChange={(value) => handleInputChange("country", value)}>
-                        <SelectTrigger className={`h-11 transition-all duration-200 ${errors.country ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}>
+                        <SelectTrigger className={`h-11 rounded-[var(--radius-md)] border-[rgba(10,10,10,0.14)] bg-[var(--paper)] text-[var(--graphite-900)] ${errors.country ? "border-[var(--danger)]" : ""}`}>
                           <SelectValue placeholder="Select country" />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
-                          {countries.map((country) => (
-                            <SelectItem key={country} value={country}>{country}</SelectItem>
-                          ))}
+                          {countries.map((country) => <SelectItem key={country} value={country}>{country}</SelectItem>)}
                         </SelectContent>
                       </Select>
-                      {errors.country && <p className="text-sm text-red-500">{errors.country}</p>}
+                      {errors.country && <p className="text-xs text-[var(--danger)]">{errors.country}</p>}
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="city" className="text-slate-700">City *</Label>
-                      <Input
-                        id="city"
-                        placeholder="New York"
-                        value={formData.city}
-                        onChange={(e) => handleInputChange("city", e.target.value)}
-                        className={`h-11 transition-all duration-200 ${errors.city ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
-                      />
-                      {errors.city && <p className="text-sm text-red-500">{errors.city}</p>}
+                    <div className="space-y-1.5">
+                      <Label htmlFor="city" className="text-sm font-medium text-[var(--graphite-700)]">City *</Label>
+                      <Input id="city" placeholder="Riyadh" value={formData.city} onChange={(e) => handleInputChange("city", e.target.value)} className={fieldCls("city")} />
+                      {errors.city && <p className="text-xs text-[var(--danger)]">{errors.city}</p>}
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="postalCode" className="text-slate-700">Postal Code *</Label>
-                      <Input
-                        id="postalCode"
-                        placeholder="10001"
-                        value={formData.postalCode}
-                        onChange={(e) => handleInputChange("postalCode", e.target.value)}
-                        className={`h-11 transition-all duration-200 ${errors.postalCode ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
-                      />
-                      {errors.postalCode && <p className="text-sm text-red-500">{errors.postalCode}</p>}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="postalCode" className="text-sm font-medium text-[var(--graphite-700)]">Postal code *</Label>
+                      <Input id="postalCode" placeholder="12345" value={formData.postalCode} onChange={(e) => handleInputChange("postalCode", e.target.value)} className={fieldCls("postalCode")} />
+                      {errors.postalCode && <p className="text-xs text-[var(--danger)]">{errors.postalCode}</p>}
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="address" className="text-slate-700">Street Address *</Label>
-                      <Input
-                        id="address"
-                        placeholder="123 Main Street"
-                        value={formData.address}
-                        onChange={(e) => handleInputChange("address", e.target.value)}
-                        className={`h-11 transition-all duration-200 ${errors.address ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
-                      />
-                      {errors.address && <p className="text-sm text-red-500">{errors.address}</p>}
+                    <div className="space-y-1.5">
+                      <Label htmlFor="address" className="text-sm font-medium text-[var(--graphite-700)]">Street address *</Label>
+                      <Input id="address" placeholder="123 King Fahd Road" value={formData.address} onChange={(e) => handleInputChange("address", e.target.value)} className={fieldCls("address")} />
+                      {errors.address && <p className="text-xs text-[var(--danger)]">{errors.address}</p>}
                     </div>
                   </div>
-                </div>
+                </section>
 
-                {/* Company Details */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-slate-800 border-b pb-2">Company Details</h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="industry" className="text-slate-700">Industry *</Label>
+                {/* ── Company details ── */}
+                <section className="space-y-4">
+                  <h3 className="eyebrow text-[var(--graphite-500)] border-b border-[var(--border-1)] pb-2">
+                    Company details
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="industry" className="text-sm font-medium text-[var(--graphite-700)]">Industry *</Label>
                       <Select value={formData.industry} onValueChange={(value) => handleInputChange("industry", value)}>
-                        <SelectTrigger className={`h-11 transition-all duration-200 ${errors.industry ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}>
+                        <SelectTrigger className={`h-11 rounded-[var(--radius-md)] border-[rgba(10,10,10,0.14)] bg-[var(--paper)] text-[var(--graphite-900)] ${errors.industry ? "border-[var(--danger)]" : ""}`}>
                           <SelectValue placeholder="Select industry" />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
-                          {industries.map((industry) => (
-                            <SelectItem key={industry} value={industry}>{industry}</SelectItem>
-                          ))}
+                          {industries.map((industry) => <SelectItem key={industry} value={industry}>{industry}</SelectItem>)}
                         </SelectContent>
                       </Select>
-                      {errors.industry && <p className="text-sm text-red-500">{errors.industry}</p>}
+                      {errors.industry && <p className="text-xs text-[var(--danger)]">{errors.industry}</p>}
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="companySize" className="text-slate-700">Company Size *</Label>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="companySize" className="text-sm font-medium text-[var(--graphite-700)]">Company size *</Label>
                       <Select value={formData.companySize} onValueChange={(value) => handleInputChange("companySize", value)}>
-                        <SelectTrigger className={`h-11 transition-all duration-200 ${errors.companySize ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}>
-                          <SelectValue placeholder="Select company size" />
+                        <SelectTrigger className={`h-11 rounded-[var(--radius-md)] border-[rgba(10,10,10,0.14)] bg-[var(--paper)] text-[var(--graphite-900)] ${errors.companySize ? "border-[var(--danger)]" : ""}`}>
+                          <SelectValue placeholder="Select size" />
                         </SelectTrigger>
                         <SelectContent>
-                          {companySizes.map((size) => (
-                            <SelectItem key={size.value} value={size.value}>{size.label}</SelectItem>
-                          ))}
+                          {companySizes.map((size) => <SelectItem key={size.value} value={size.value}>{size.label}</SelectItem>)}
                         </SelectContent>
                       </Select>
-                      {errors.companySize && <p className="text-sm text-red-500">{errors.companySize}</p>}
+                      {errors.companySize && <p className="text-xs text-[var(--danger)]">{errors.companySize}</p>}
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="companySince" className="text-slate-700">Company Since *</Label>
-                      <Input
-                        id="companySince"
-                        type="number"
-                        min="1800"
-                        max={new Date().getFullYear()}
-                        placeholder="2020"
-                        value={formData.companySince}
-                        onChange={(e) => handleInputChange("companySince", e.target.value)}
-                        className={`h-11 transition-all duration-200 ${errors.companySince ? "border-red-500 focus:border-red-500" : "focus:border-teal-500"}`}
-                      />
-                      {errors.companySince && <p className="text-sm text-red-500">{errors.companySince}</p>}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="companySince" className="text-sm font-medium text-[var(--graphite-700)]">Founded *</Label>
+                      <Input id="companySince" type="number" min="1800" max={new Date().getFullYear()} placeholder="2020" value={formData.companySince} onChange={(e) => handleInputChange("companySince", e.target.value)} className={fieldCls("companySince")} />
+                      {errors.companySince && <p className="text-xs text-[var(--danger)]">{errors.companySince}</p>}
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="logo" className="text-slate-700">Company Logo</Label>
-                      <div className="relative">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="logo" className="text-sm font-medium text-[var(--graphite-700)]">Company logo</Label>
+                      <div>
                         <Input id="logo" type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
-                        <Button
+                        <button
                           type="button"
-                          variant="outline"
-                          className="w-full h-11 justify-start bg-transparent"
                           onClick={() => document.getElementById("logo")?.click()}
+                          className="w-full h-11 flex items-center gap-2 px-3 rounded-[var(--radius-md)] border border-[rgba(10,10,10,0.14)] bg-[var(--paper)] text-sm text-[var(--graphite-600)] hover:bg-[var(--graphite-50)] hover:text-[var(--graphite-900)] transition-colors duration-150"
                         >
-                          <Upload className="w-4 h-4 mr-2" />
-                          {formData.logo ? formData.logo.name : "Upload logo"}
-                        </Button>
+                          <Upload className="w-4 h-4 flex-shrink-0" />
+                          <span className="truncate">{formData.logo ? formData.logo.name : "Upload logo"}</span>
+                        </button>
                       </div>
-                      {errors.logo && <p className="text-sm text-red-500">{errors.logo}</p>}
+                      {errors.logo && <p className="text-xs text-[var(--danger)]">{errors.logo}</p>}
                     </div>
                   </div>
-                </div>
+                </section>
 
-                {/* Submit */}
-                <Button
+                {/* ── Submit ── */}
+                <button
                   type="submit"
-                  className="w-full h-12 bg-teal-600 hover:bg-teal-700 text-white text-lg font-medium transition-all duration-200 transform hover:scale-[1.02]"
                   disabled={isLoading}
+                  className="w-full h-11 bg-[var(--ink)] hover:bg-[var(--graphite-800)] text-[var(--fg-on-dark)] rounded-[var(--radius-md)] text-sm font-medium transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isLoading ? (
-                    <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Creating Account...</span>
-                    </div>
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                      Creating account...
+                    </>
                   ) : (
-                    "Create Company Account"
+                    "Create company account"
                   )}
-                </Button>
+                </button>
+
               </form>
 
+              {/* API error banner */}
               {errorMessage && (
-                <div className="mt-4 p-2 text-sm text-red-600 bg-red-100 rounded whitespace-pre-line">
+                <div className="mt-4 p-3 text-sm text-[var(--danger)] bg-[var(--danger-soft)] rounded-[var(--radius-sm)] whitespace-pre-line">
                   {errorMessage}
                 </div>
               )}
 
-              <div className="mt-6 text-center">
-                <p className="text-sm text-slate-600">
-                  Already have an account?{" "}
-                  <Link href="/login" className="text-teal-600 hover:text-teal-700 font-medium transition-colors duration-200">
-                    Sign in
-                  </Link>
-                </p>
-              </div>
+              <p className="mt-6 text-center text-sm text-[var(--graphite-500)]">
+                Already have an account?{" "}
+                <Link href="/login" className="text-[var(--graphite-900)] font-medium hover:underline">
+                  Sign in
+                </Link>
+              </p>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   )
