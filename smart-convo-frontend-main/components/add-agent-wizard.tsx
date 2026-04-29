@@ -429,21 +429,21 @@ const predefinedVoices = [
     name: "Marissa",
     description: "your voice agent from Canada.",
     avatar: "/placeholder.svg?height=64&width=64",
-    audioSrc: "/placeholder.svg?height=64&width=64",
+    audioSrc: "/voices/marissa.mp3",
   },
   {
     id: "scott",
     name: "Scott",
     description: "your voice agent from America.",
     avatar: "/placeholder.svg?height=64&width=64",
-    audioSrc: "/placeholder.svg?height=64&width=64",
+    audioSrc: "/voices/scott.mp3",
   },
   {
     id: "charlie",
     name: "Charlie",
     description: "your voice agent from UK.",
     avatar: "/placeholder.svg?height=64&width=64",
-    audioSrc: "/placeholder.svg?height=64&width=64",
+    audioSrc: "/voices/luna.mp3",
   },
 ]
 
