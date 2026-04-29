@@ -412,7 +412,7 @@ export default function LoginPage() {
             that think.
           </h1>
           <p className="text-[var(--graphite-500)] text-lg leading-relaxed max-w-[40ch] mb-8">
-            SmartConvo by Pentagon AI — the agentic platform for customer communication at scale.
+            Nexivo by Pentagon AI — the agentic platform for customer communication at scale.
           </p>
           <Link
             href="/signup"
@@ -429,13 +429,13 @@ export default function LoginPage() {
             {/* Brand mark */}
             <div className="flex items-center gap-2.5 mb-8">
               <div
-                className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center flex-shrink-0"
-                style={{ background: "var(--brand-gradient)" }}
+                className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center flex-shrink-0"
+                style={{ background: "linear-gradient(135deg, #ece9f5 0%, #dfe8e6 100%)" }}
               >
-                <MessageSquare className="w-4 h-4 text-white" />
+                <img src="/nexivo-mark.svg" alt="Nexivo" width={24} height={24} />
               </div>
-              <span className="font-sans font-medium text-[var(--graphite-900)] text-[15px] tracking-[-0.01em]">
-                Smart Convo
+              <span style={{ fontFamily: "var(--font-display)", fontSize: 20, color: "var(--ink)", lineHeight: 1.2 }}>
+                nexivo
               </span>
             </div>
 

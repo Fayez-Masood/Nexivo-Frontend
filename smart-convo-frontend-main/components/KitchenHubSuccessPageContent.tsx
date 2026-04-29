@@ -82,7 +82,7 @@ export default function KitchenHubSuccessPage() {
           You’re Connected to KitchenHub 🍽️
         </h1>
         <p className="text-gray-500 max-w-xl mx-auto leading-relaxed">
-          Select your restaurant’s POS or CRM below to complete integration with SmartConvo.
+          Select your restaurant’s POS or CRM below to complete integration with Nexivo.
         </p>
       </motion.div>
 
@@ -143,7 +143,7 @@ export default function KitchenHubSuccessPage() {
         className="mt-16 text-sm text-gray-400"
       >
         Securely powered by{" "}
-        <span className="font-medium text-gray-700">SmartConvo × KitchenHub</span>
+        <span className="font-medium text-gray-700">Nexivo × KitchenHub</span>
       </motion.p>
     </div>
   )

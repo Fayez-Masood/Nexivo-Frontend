@@ -8,9 +8,8 @@ import { TutorialProvider } from "@/components/tutorial/TutorialProvider";
 import 'leaflet/dist/leaflet.css'
 
 export const metadata: Metadata = {
-  title: "Smart Convo - Dashboard",
-  description: "Modern corporate dashboard for Smart Convo",
-    // generator: 'v0.dev'
+  title: "Nexivo - Dashboard",
+  description: "Customer support, resolved by agents that think.",
     generator: 'v0.dev'
 }
 

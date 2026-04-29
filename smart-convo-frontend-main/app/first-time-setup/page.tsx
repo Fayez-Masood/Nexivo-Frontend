@@ -197,7 +197,7 @@ export default function FirstTimeSetupPage() {
 
       toast({
         title: "Setup Complete",
-        description: "Welcome to Smart Convo! Redirecting to your dashboard...",
+        description: "Welcome to Nexivo! Redirecting to your dashboard...",
       })
 
       setTimeout(() => {
@@ -235,7 +235,7 @@ export default function FirstTimeSetupPage() {
 
     toast({
       title: "Setup Complete",
-      description: "Welcome to Smart Convo! Redirecting to your dashboard...",
+      description: "Welcome to Nexivo! Redirecting to your dashboard...",
     })
 
     setTimeout(() => {
@@ -248,10 +248,15 @@ export default function FirstTimeSetupPage() {
       <Card className="w-full max-w-md shadow-xl border-0">
         <CardHeader className="space-y-4 text-center">
           <div className="flex items-center justify-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg flex items-center justify-center">
-              {currentStep === 1 ? <Lock className="w-6 h-6 text-white" /> : <Camera className="w-6 h-6 text-white" />}
+            <div
+              className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center"
+              style={{ background: "linear-gradient(135deg, #ece9f5 0%, #dfe8e6 100%)" }}
+            >
+              <img src="/nexivo-mark.svg" alt="Nexivo" width={24} height={24} />
             </div>
-            <span className="text-2xl font-bold text-slate-800">Smart Convo</span>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: 22, color: "var(--ink)", lineHeight: 1.2 }}>
+              nexivo
+            </span>
           </div>
 
           <div>

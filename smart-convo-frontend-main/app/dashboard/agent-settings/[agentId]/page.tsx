@@ -3749,7 +3749,7 @@ export default function AgentConfigPage({ params }: { params: Promise<{ agentId:
               <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
             </div>
             <p className="text-xs text-slate-400 font-light tracking-wider">
-              Powered by SmartConvo
+              Powered by Nexivo
             </p>
           </div>
         </div>

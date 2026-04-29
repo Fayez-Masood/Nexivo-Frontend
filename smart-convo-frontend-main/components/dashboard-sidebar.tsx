@@ -750,34 +750,37 @@ export function DashboardSidebar() {
           {!isCollapsed && (
             <div className="flex items-center gap-2.5 min-w-0">
               <div
-                className="w-7 h-7 rounded-[var(--radius-xs)] flex items-center justify-center flex-shrink-0"
-                style={{ background: "var(--brand-gradient)" }}
+                className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center flex-shrink-0"
+                style={{ background: "linear-gradient(135deg, #ece9f5 0%, #dfe8e6 100%)" }}
               >
                 <Image
-                  src="/Logo.png"
-                  alt="Smart Convo"
-                  width={18}
-                  height={18}
-                  className="rounded pointer-events-none"
+                  src="/nexivo-mark.svg"
+                  alt="Nexivo"
+                  width={24}
+                  height={24}
+                  className="pointer-events-none"
                   draggable={false}
                 />
               </div>
-              <span className="font-sans font-semibold text-[var(--graphite-900)] text-[15px] tracking-[-0.01em] truncate">
-                Smart Convo
+              <span
+                className="truncate"
+                style={{ fontFamily: "var(--font-display)", fontSize: 20, color: "var(--ink)", lineHeight: 1.2 }}
+              >
+                nexivo
               </span>
             </div>
           )}
           {isCollapsed && (
             <div
-              className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center flex-shrink-0"
-              style={{ background: "var(--brand-gradient)" }}
+              className="w-[34px] h-[34px] rounded-[10px] flex items-center justify-center flex-shrink-0"
+              style={{ background: "linear-gradient(135deg, #ece9f5 0%, #dfe8e6 100%)" }}
             >
               <Image
-                src="/Logo.png"
-                alt="Smart Convo"
-                width={20}
-                height={20}
-                className="rounded pointer-events-none"
+                src="/nexivo-mark.svg"
+                alt="Nexivo"
+                width={24}
+                height={24}
+                className="pointer-events-none"
                 draggable={false}
               />
             </div>
@@ -831,7 +834,7 @@ export function DashboardSidebar() {
                             className={cn(
                               "flex items-center gap-2.5 px-3 py-1.5 text-sm rounded-[var(--radius-sm)] transition-colors duration-150",
                               pathname === child.href
-                                ? "bg-[var(--signal-soft)] text-[var(--signal-ink)] font-medium"
+                                ? "bg-[var(--mist-bg)] text-[var(--ink)] font-medium"
                                 : "text-[var(--graphite-600)] hover:bg-[var(--graphite-50)] hover:text-[var(--graphite-900)]",
                             )}
                           >
@@ -852,7 +855,7 @@ export function DashboardSidebar() {
                       "flex items-center px-3 py-2 text-sm rounded-[var(--radius-sm)] transition-colors duration-150",
                       isCollapsed ? "justify-center" : "gap-3",
                       pathname === item.href
-                        ? "bg-[var(--signal-soft)] text-[var(--signal-ink)] font-medium"
+                        ? "bg-[var(--mist-bg)] text-[var(--ink)] font-medium"
                         : "text-[var(--graphite-600)] hover:bg-[var(--graphite-50)] hover:text-[var(--graphite-900)]",
                     )}
                   >

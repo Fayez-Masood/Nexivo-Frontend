@@ -268,7 +268,7 @@
 //             {step === 2 && (
 //               <div className="space-y-6">
 //                 <h3 className="text-xl font-semibold text-gray-800">
-//                   What do you want SmartConvo agents to accomplish for you?
+//                   What do you want Nexivo agents to accomplish for you?
 //                 </h3>
 //                 <p className="text-gray-600">
 //                   Describe the goal of the agent in a declarative manner. For example: Your goal is to determine what
@@ -691,7 +691,7 @@ useEffect(() => {
 
             {step === 2 && (
               <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-gray-800">What do you want SmartConvo agents to accomplish for you?</h3>
+                <h3 className="text-xl font-semibold text-gray-800">What do you want Nexivo agents to accomplish for you?</h3>
                 <p className="text-gray-600">Describe the goal of the agent in a declarative manner...</p>
                 <Textarea id="goals" placeholder="Describe the agent's goals..." value={formData.goals} onChange={handleInputChange} rows={6} className="min-h-[100px]" />
                 <Textarea id="prompt" placeholder="Add the system prompt..." value={formData.prompt} onChange={handleInputChange} rows={6} className="min-h-[100px]" />
@@ -1055,7 +1055,7 @@ useEffect(() => {
 
 //             {step === 2 && (
 //               <div className="space-y-6">
-//                 <h3 className="text-xl font-semibold text-gray-800">What do you want SmartConvo agents to accomplish for you?</h3>
+//                 <h3 className="text-xl font-semibold text-gray-800">What do you want Nexivo agents to accomplish for you?</h3>
 //                 <p className="text-gray-600">Describe the goal of the agent in a declarative manner...</p>
 //                 <Textarea id="goals" placeholder="Describe the agent's goals..." value={formData.goals} onChange={handleInputChange} rows={6} className="min-h-[100px]" />
 //                 <Textarea id="prompt" placeholder="Add the system prompt..." value={formData.prompt} onChange={handleInputChange} rows={6} className="min-h-[100px]" />
