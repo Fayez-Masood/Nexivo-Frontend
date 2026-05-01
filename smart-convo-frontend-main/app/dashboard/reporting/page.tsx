@@ -49,10 +49,10 @@ interface PieSegment {
 
 
 const STATUS_COLORS: Record<string, string> = {
-  success: "#10b981",
-  failure: "#ef4444",
-  pending: "#f59e0b",
-  error: "#dc2626",
+  success: "#2d5555",
+  failure: "#c0392b",
+  pending: "#b8860b",
+  error: "#c0392b",
 }
 
 
@@ -63,9 +63,9 @@ const STATUS_DISPLAY: Record<string, string> = {
 
 
 const GRADIENT_COLORS = [
-  "#6366f1", "#8b5cf6", "#ec4899", "#f43f5e",
-  "#10b981", "#06b6d4", "#f59e0b", "#84cc16",
-  "#3b82f6", "#a855f7", "#14b8a6", "#eab308"
+  "#2d5555", "#4a7c6e", "#7b9ea0", "#a8c5b5",
+  "#c9a87c", "#d4b896", "#8a9fa0", "#6b8fa0",
+  "#5c7a7a", "#3d6b6b", "#92a87a", "#b5c4a0"
 ]
 
 
@@ -390,98 +390,62 @@ export default function InsightsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <div className="relative w-20 h-20 mx-auto">
-            <div className="absolute inset-0 border-4 border-slate-200 rounded-full"></div>
-            <div className="absolute inset-0 border-4 border-slate-900 rounded-full border-t-transparent animate-spin"></div>
-          </div>
-          <p className="text-slate-600 font-light tracking-wide">Loading insights...</p>
-        </div>
+      <div style={{ minHeight: "100vh", background: "var(--canvas)", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 12 }}>
+        <div style={{ width: 28, height: 28, border: "2px solid var(--border-2)", borderTopColor: "var(--signal)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+        <span style={{ fontSize: 13, color: "var(--fg-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>Loading insights…</span>
+        <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
       </div>
     )
   }
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-white border-b border-slate-200">
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-50/50 via-transparent to-slate-50/50"></div>
-        
-        <div className="relative max-w-7xl mx-auto px-8 py-16">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="w-1 h-20 bg-gradient-to-b from-slate-900 via-slate-400 to-slate-200 rounded-full"></div>
-            <div>
-              <h1 className="text-5xl font-extralight tracking-tight text-slate-900 mb-2">
-                Insights & Analytics
-              </h1>
-              <p className="text-lg text-slate-500 font-light tracking-wide">
-                Real-time event monitoring and performance metrics
-              </p>
-            </div>
+    <div style={{ minHeight: "100vh", background: "var(--canvas)" }}>
+      {/* Page header */}
+      <div style={{ background: "var(--paper)", borderBottom: "1px solid var(--border-1)", padding: "28px 32px" }}>
+        <div>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--fg-3)", marginBottom: 6 }}>
+            Reporting
           </div>
+          <h1 style={{ fontSize: 22, fontWeight: 500, color: "var(--fg-1)", letterSpacing: "-0.02em", margin: 0, lineHeight: 1.2 }}>
+            Insights & Analytics
+          </h1>
+          <p style={{ fontSize: 13, color: "var(--fg-3)", marginTop: 4 }}>
+            Real-time event monitoring and performance metrics
+          </p>
+        </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-12">
-            <div className="group bg-white border border-green-200 rounded-2xl p-6 hover:shadow-lg hover:border-green-300 transition-all duration-300">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center group-hover:bg-green-500 group-hover:scale-110 transition-all duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-green-600 group-hover:text-white transition-colors duration-300" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-20">
+            {[
+              { bg: "var(--sage-bg)",  ink: "var(--sage-ink)",  icon: CheckCircle2, value: statusStats.success,      label: "Success" },
+              { bg: "var(--blush-bg)", ink: "var(--blush-ink)", icon: XCircle,      value: statusStats.failure,      label: "Failure" },
+              { bg: "var(--butter-bg)",ink: "var(--butter-ink)",icon: AlertCircle,  value: statusStats.pending,      label: "Pending" },
+              { bg: "var(--sky-bg)",   ink: "var(--sky-ink)",   icon: Activity,     value: filteredEvents.length,    label: "Total Events" },
+            ].map(({ bg, ink, icon: Icon, value, label }) => (
+              <div key={label} style={{ background: "var(--paper)", border: "1px solid var(--border-1)", borderRadius: "var(--radius-lg)", padding: "16px 18px", display: "flex", alignItems: "center", gap: 12, boxShadow: "var(--shadow-sm)" }}>
+                <div style={{ width: 38, height: 38, borderRadius: 9, background: bg, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Icon style={{ width: 17, height: 17, color: ink }} strokeWidth={1.5} />
                 </div>
-                <BarChart3 className="w-5 h-5 text-green-300" />
-              </div>
-              <p className="text-3xl font-light text-slate-900 mb-1">{statusStats.success}</p>
-              <p className="text-xs text-slate-500 uppercase tracking-wider font-light">Success</p>
-            </div>
-
-            <div className="group bg-white border border-red-200 rounded-2xl p-6 hover:shadow-lg hover:border-red-300 transition-all duration-300">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center group-hover:bg-red-500 group-hover:scale-110 transition-all duration-300">
-                  <XCircle className="w-6 h-6 text-red-600 group-hover:text-white transition-colors duration-300" />
+                <div>
+                  <div style={{ fontSize: 26, fontWeight: 300, color: "var(--fg-1)", letterSpacing: "-0.03em", lineHeight: 1 }}>{value}</div>
+                  <div style={{ fontSize: 11, fontWeight: 500, color: "var(--fg-4)", marginTop: 3, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
                 </div>
-                <BarChart3 className="w-5 h-5 text-red-300" />
               </div>
-              <p className="text-3xl font-light text-slate-900 mb-1">{statusStats.failure}</p>
-              <p className="text-xs text-slate-500 uppercase tracking-wider font-light">Failure</p>
-            </div>
-
-            <div className="group bg-white border border-amber-200 rounded-2xl p-6 hover:shadow-lg hover:border-amber-300 transition-all duration-300">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center group-hover:bg-amber-500 group-hover:scale-110 transition-all duration-300">
-                  <AlertCircle className="w-6 h-6 text-amber-600 group-hover:text-white transition-colors duration-300" />
-                </div>
-                <BarChart3 className="w-5 h-5 text-amber-300" />
-              </div>
-              <p className="text-3xl font-light text-slate-900 mb-1">{statusStats.pending}</p>
-              <p className="text-xs text-slate-500 uppercase tracking-wider font-light">Pending</p>
-            </div>
-
-            <div className="group bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg hover:border-slate-300 transition-all duration-300">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-slate-900 group-hover:scale-110 transition-all duration-300">
-                  <Activity className="w-6 h-6 text-slate-600 group-hover:text-white transition-colors duration-300" />
-                </div>
-                <BarChart3 className="w-5 h-5 text-slate-300" />
-              </div>
-              <p className="text-3xl font-light text-slate-900 mb-1">{filteredEvents.length}</p>
-              <p className="text-xs text-slate-500 uppercase tracking-wider font-light">Total Events</p>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-8 py-12 space-y-8">
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-slate-50 to-white px-8 py-5 border-b border-slate-200">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-slate-600" />
-              <h2 className="text-lg font-light text-slate-900">Filter Analytics</h2>
+        <div style={{ background: "var(--paper)", borderRadius: "var(--radius-lg)", border: "1px solid var(--border-1)", overflow: "hidden" }}>
+          <div style={{ padding: "16px 24px", borderBottom: "1px solid var(--border-1)", display: "flex", alignItems: "center", gap: 8 }}>
+            <TrendingUp style={{ width: 16, height: 16, color: "var(--fg-3)" }} strokeWidth={1.5} />
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 500, color: "var(--fg-1)" }}>Filter Analytics</div>
+              <div style={{ fontSize: 12, color: "var(--fg-3)", marginTop: 2 }}>Refine your insights by event type and status</div>
             </div>
-            <p className="text-sm text-slate-500 font-light mt-1">
-              Refine your insights by event type and status
-            </p>
           </div>
           <div className="p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -561,27 +525,22 @@ export default function InsightsPage() {
 
         {/* Charts Section */}
         {filteredEvents.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-            <div className="py-20">
-              <p className="text-center text-slate-500 text-lg italic font-light">
-                No events found matching your filters
-              </p>
-            </div>
+          <div style={{ background: "var(--paper)", borderRadius: "var(--radius-lg)", border: "1px solid var(--border-1)", padding: "48px 24px", textAlign: "center" }}>
+            <p style={{ fontSize: 14, color: "var(--fg-3)" }}>No events found matching your filters</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Pie Chart */}
-            <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-slate-50 to-white px-8 py-5 border-b border-slate-200">
-                <h3 className="text-lg font-light text-slate-900 text-center">Event Distribution</h3>
-                <p className="text-sm text-slate-500 font-light text-center mt-1">
-                  {selectedEventTypes.includes("all") 
+            <div style={{ background: "var(--paper)", borderRadius: "var(--radius-lg)", border: "1px solid var(--border-1)", overflow: "hidden" }}>
+              <div style={{ padding: "16px 24px", borderBottom: "1px solid var(--border-1)" }}>
+                <div style={{ fontSize: 14, fontWeight: 500, color: "var(--fg-1)", textAlign: "center" }}>Event Distribution</div>
+                <div style={{ fontSize: 12, color: "var(--fg-3)", textAlign: "center", marginTop: 2 }}>
+                  {selectedEventTypes.includes("all")
                     ? "Visual breakdown by event type and status"
                     : selectedEventTypes.length === 1
                     ? `Status breakdown for ${selectedEventTypes[0]}`
-                    : "Visual breakdown by selected event types and status"
-                  }
-                </p>
+                    : "Visual breakdown by selected event types and status"}
+                </div>
               </div>
               <div className="py-8 px-6">
                 <PieChart segments={pieSegments} />
@@ -589,33 +548,28 @@ export default function InsightsPage() {
             </div>
 
             {/* Legend */}
-            <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-slate-50 to-white px-8 py-5 border-b border-slate-200">
-                <h3 className="text-lg font-light text-slate-900">Legend</h3>
-                <p className="text-sm text-slate-500 font-light mt-1">
-                  Detailed segment breakdown
-                </p>
+            <div style={{ background: "var(--paper)", borderRadius: "var(--radius-lg)", border: "1px solid var(--border-1)", overflow: "hidden" }}>
+              <div style={{ padding: "16px 24px", borderBottom: "1px solid var(--border-1)" }}>
+                <div style={{ fontSize: 14, fontWeight: 500, color: "var(--fg-1)" }}>Legend</div>
+                <div style={{ fontSize: 12, color: "var(--fg-3)", marginTop: 2 }}>Detailed segment breakdown</div>
               </div>
               <div className="p-6">
                 <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
                   {pieSegments.map((segment, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-4 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors border border-slate-200"
+                      style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", borderRadius: "var(--radius-md)", background: "var(--graphite-50)", border: "1px solid var(--border-1)" }}
                     >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-4 h-4 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: segment.color }}
-                        />
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ width: 10, height: 10, borderRadius: "50%", flexShrink: 0, background: segment.color }} />
                         <div>
-                          <p className="text-slate-900 font-light text-sm">{segment.eventType}</p>
-                          <p className="text-slate-600 text-xs font-light">{STATUS_DISPLAY[segment.status] || segment.status}</p>
+                          <p style={{ fontSize: 13, color: "var(--fg-1)", margin: 0 }}>{segment.eventType}</p>
+                          <p style={{ fontSize: 11, color: "var(--fg-3)", margin: 0 }}>{STATUS_DISPLAY[segment.status] || segment.status}</p>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="text-slate-900 font-light text-lg">{segment.count}</p>
-                        <p className="text-slate-600 text-xs font-light">{segment.percentage.toFixed(1)}%</p>
+                      <div style={{ textAlign: "right" }}>
+                        <p style={{ fontSize: 18, fontWeight: 300, color: "var(--fg-1)", letterSpacing: "-0.03em", margin: 0 }}>{segment.count}</p>
+                        <p style={{ fontSize: 11, color: "var(--fg-3)", fontFamily: "var(--font-mono)", margin: 0 }}>{segment.percentage.toFixed(1)}%</p>
                       </div>
                     </div>
                   ))}
@@ -625,11 +579,7 @@ export default function InsightsPage() {
           </div>
         )}
 
-        <div className="mt-16 flex items-center justify-center gap-2">
-          <div className="w-1 h-1 bg-slate-300 rounded-full animate-pulse"></div>
-          <div className="w-1 h-1 bg-slate-300 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-1 h-1 bg-slate-300 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-        </div>
+        <div style={{ height: 32 }} />
       </div>
     </div>
   )

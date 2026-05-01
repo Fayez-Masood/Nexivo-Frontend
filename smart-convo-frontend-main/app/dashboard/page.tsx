@@ -2504,11 +2504,7 @@ export default function DashboardPage() {
 
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50/50">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(251,191,36,0.02),transparent_50%),radial-gradient(circle_at_70%_60%,rgba(14,165,233,0.03),transparent_50%)]"></div>
-
-
-      <CursorGlow />
+    <div className="relative min-h-screen" style={{ background: "var(--canvas)" }}>
 
 
       {/* Map dialog — rendered at root level so it sits above everything */}
@@ -2575,7 +2571,7 @@ export default function DashboardPage() {
                 <div><AIFailuresSection /></div>
 
                 {/* Phone Numbers — amber */}
-                <Card className="group relative overflow-hidden bg-white border border-amber-100 shadow-sm hover:shadow-md rounded-3xl transition-all duration-300">
+                <Card className="group relative overflow-hidden border shadow-sm hover:shadow-md rounded-2xl transition-all duration-300" style={{ background: "var(--paper)", borderColor: "var(--border-1)" }}>
                   <CardHeader className="relative pb-2 pt-4 px-5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
