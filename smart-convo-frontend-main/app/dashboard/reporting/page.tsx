@@ -435,7 +435,6 @@ export default function InsightsPage() {
             ))}
           </div>
         </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-8 py-12 space-y-8">
         {/* Filters */}
