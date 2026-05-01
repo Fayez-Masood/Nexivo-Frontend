@@ -68,7 +68,7 @@ const [loadingTools, setLoadingTools] = useState(false)
               id: agent.id,
               name: agent.name,
               status: agent.status === "Active" || agent.status === "active" ? "Active" : "Inactive",
-              persona: agent.persona || "Unknown",
+              persona: agent.persona || agent.description || "Not configured",
               primary: agent.primary || false,
             }))
           : []
@@ -751,7 +751,7 @@ const handleViewTools = async (agentId: number) => {
 //               id: agent.id,
 //               name: agent.name,
 //               status: agent.status === "Active" || agent.status === "active" ? "Active" : "Inactive",
-//               persona: agent.persona || "Unknown",
+//               persona: agent.persona || agent.description || "Not configured",
 //               primary: agent.primary || false,
 //             }))
 //           : []

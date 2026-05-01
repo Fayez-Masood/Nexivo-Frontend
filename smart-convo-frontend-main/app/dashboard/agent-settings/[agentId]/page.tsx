@@ -1080,8 +1080,25 @@ function FAQTab({ agentId }: { agentId: string }) {
       return
     }
 
+    // Derive content-type from extension if browser leaves it blank (common on Windows for .txt)
+    const extMimeMap: Record<string, string> = {
+      ".pdf":  "application/pdf",
+      ".txt":  "text/plain",
+      ".md":   "text/markdown",
+      ".csv":  "text/csv",
+    }
+    const ext = file.name.slice(file.name.lastIndexOf(".")).toLowerCase()
+    const contentType = file.type || extMimeMap[ext] || ""
+
+    if (!contentType) {
+      setErrorMessage("Unsupported file type. Please upload a PDF, TXT, MD, or CSV file.")
+      setTimeout(() => setErrorMessage(""), 5000)
+      return
+    }
+
     setUploading(true)
     try {
+      // Step 1 — get a presigned S3 PUT URL from the backend
       const presignedRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/documents/s3/presigned-url/`, {
         method: "POST",
         headers: {
@@ -1090,22 +1107,31 @@ function FAQTab({ agentId }: { agentId: string }) {
         },
         body: JSON.stringify({
           file_name: file.name,
-          content_type: file.type
+          content_type: contentType
         })
       })
 
       const presignedData = await presignedRes.json()
-      const uploadUrl = presignedData.url
-      const s3Key = presignedData.file_key
 
+      // Surface the backend's own error message (e.g. "Unsupported file type")
+      if (!presignedRes.ok) {
+        const backendError = presignedData?.error || `Server error (${presignedRes.status})`
+        throw new Error(backendError)
+      }
+
+      const uploadUrl = presignedData.url
+      const s3Key = presignedData.s3_key  // backend field is s3_key, not file_key
+
+      // Step 2 — PUT the file directly to S3 via the presigned URL
       const s3Res = await fetch(uploadUrl, {
         method: "PUT",
-        headers: { "Content-Type": file.type },
+        headers: { "Content-Type": contentType },
         body: file
       })
 
-      if (!s3Res.ok) throw new Error("S3 upload failed")
+      if (!s3Res.ok) throw new Error(`S3 upload failed (HTTP ${s3Res.status})`)
 
+      // Step 3 — register the document in the backend (triggers RAG ingestion)
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/documents/documents/`, {
         method: "POST",
         headers: {
@@ -1116,21 +1142,23 @@ function FAQTab({ agentId }: { agentId: string }) {
           title: file.name,
           description: "FAQ Document",
           s3_url: uploadUrl.split("?")[0],
-          file_key: s3Key,
+          s3_key: s3Key,
           agent_id: agentId,
         })
       })
 
       if (response.ok) {
-        setSuccessMessage("File uploaded successfully!")
-        setTimeout(() => setSuccessMessage(""), 3000)
+        setSuccessMessage("File uploaded successfully! It will be processed in a few seconds.")
+        setTimeout(() => setSuccessMessage(""), 5000)
         fetchDocuments()
       } else {
-        setErrorMessage("Upload metadata failed")
+        const errData = await response.json().catch(() => ({}))
+        throw new Error(errData?.detail || errData?.error || `Metadata save failed (${response.status})`)
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Upload failed:", err)
-      setErrorMessage("Upload failed.")
+      setErrorMessage(err?.message || "Upload failed. Please try again.")
+      setTimeout(() => setErrorMessage(""), 6000)
     } finally {
       setUploading(false)
     }
@@ -1311,7 +1339,7 @@ function FAQTab({ agentId }: { agentId: string }) {
 
       <div className="bg-white p-6 rounded-lg border border-gray-200">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">📁 Upload FAQ Documents</h2>
-        <input type="file" ref={fileInputRef} className="mb-4" />
+        <input type="file" ref={fileInputRef} className="mb-4" accept=".pdf,.txt,.md,.csv,application/pdf,text/plain,text/markdown,text/csv" />
         <Button onClick={handleUpload} disabled={uploading} className="mb-2">
           {uploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <UploadCloud className="w-4 h-4 mr-2" />} Upload
         </Button>
