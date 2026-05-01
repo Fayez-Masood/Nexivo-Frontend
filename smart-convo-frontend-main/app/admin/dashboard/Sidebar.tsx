@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
 import { cn } from "@/lib/utils"
 import {
   Home,
@@ -18,16 +17,16 @@ import {
 } from "lucide-react"
 
 const sidebarItems = [
-  { name: "Dashboard", href: "/admin/dashboard", icon: Home },
-  { name: "Companies", href: "/admin/dashboard/companies", icon: Building2 },
-  { name: "Manage Numbers", href: "/admin/dashboard/numbers", icon: Phone },
-  { name: "Agent Configuration", href: "/admin/dashboard/agent-settings", icon: Bot },
+  { name: "Dashboard",           href: "/admin/dashboard",                      icon: Home },
+  { name: "Companies",           href: "/admin/dashboard/companies",             icon: Building2 },
+  { name: "Manage numbers",      href: "/admin/dashboard/numbers",               icon: Phone },
+  { name: "Agent configuration", href: "/admin/dashboard/agent-settings",        icon: Bot },
   {
     name: "Billing",
     icon: CreditCard,
     children: [
-      { name: "Manage Plans", href: "/admin/dashboard/billing/plans", icon: CreditCard },
-      { name: "Manage Subscriptions", href: "/admin/dashboard/billing/subscriptions", icon: CreditCard },
+      { name: "Manage plans",         href: "/admin/dashboard/billing/plans",         icon: CreditCard },
+      { name: "Manage subscriptions", href: "/admin/dashboard/billing/subscriptions", icon: CreditCard },
     ],
   },
 ]
@@ -51,121 +50,277 @@ export default function Sidebar() {
 
   return (
     <div
-      className={cn(
-        "flex-shrink-0 transition-all duration-300",
-        isCollapsed ? "w-[5.5rem]" : "w-[17.5rem]"
-      )}
+      className={cn("flex-shrink-0 transition-all duration-[220ms]", isCollapsed ? "w-[4.5rem]" : "w-[17.5rem]")}
     >
       <div
         className={cn(
-          isCollapsed ? "w-20" : "w-64",
-          "bg-[#0f1525] flex flex-col rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] border border-indigo-600/10 transition-all duration-300",
-          "fixed top-4 left-4 h-[calc(100vh-2rem)] z-10"
+          isCollapsed ? "w-[4.5rem]" : "w-[17.5rem]",
+          "flex flex-col transition-all duration-[220ms]",
+          "fixed top-0 left-0 h-screen z-10",
         )}
+        style={{
+          background: "var(--paper)",
+          borderRight: "1px solid var(--border-1)",
+        }}
       >
-        {/* Logo & Collapse Toggle */}
-        <div className="p-6 flex items-center justify-between select-none rounded-t-3xl">
+        {/* Brand */}
+        <div
+          className={cn(
+            "flex items-center justify-between select-none",
+            isCollapsed ? "px-3 py-5 justify-center" : "px-5 py-5",
+          )}
+        >
           {!isCollapsed && (
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/25">
-                <ShieldCheck className="w-5 h-5 text-white" />
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 10,
+                  background: "linear-gradient(135deg, var(--mist-bg) 0%, var(--signal-soft) 100%)",
+                  border: "1px solid var(--border-1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <ShieldCheck style={{ width: 16, height: 16, color: "var(--signal-ink)" }} strokeWidth={1.5} />
               </div>
-              <span className="text-xl font-semibold text-white">Admin</span>
+              <span
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontSize: 20,
+                  color: "var(--ink)",
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1,
+                }}
+              >
+                Admin
+              </span>
             </div>
           )}
           {isCollapsed && (
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center mx-auto shadow-lg shadow-indigo-500/25">
-              <ShieldCheck className="w-5 h-5 text-white" />
+            <div
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 10,
+                background: "linear-gradient(135deg, var(--mist-bg) 0%, var(--signal-soft) 100%)",
+                border: "1px solid var(--border-1)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ShieldCheck style={{ width: 16, height: 16, color: "var(--signal-ink)" }} strokeWidth={1.5} />
             </div>
           )}
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-1.5 hover:bg-indigo-600/20 rounded-xl transition-colors"
-          >
-            <ChevronRight
-              className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${
-                isCollapsed ? "" : "rotate-180"
-              }`}
-            />
-          </button>
+          {!isCollapsed && (
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              style={{
+                padding: 4,
+                borderRadius: "var(--radius-xs)",
+                color: "var(--graphite-400)",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                transition: "color var(--dur-fast) var(--ease-out)",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--graphite-700)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--graphite-400)")}
+            >
+              <ChevronRight
+                style={{
+                  width: 14,
+                  height: 14,
+                  transform: isCollapsed ? "none" : "rotate(180deg)",
+                  transition: "transform var(--dur-base) var(--ease-out)",
+                }}
+                strokeWidth={1.5}
+              />
+            </button>
+          )}
         </div>
 
+        {/* Divider */}
+        <div style={{ margin: "0 16px", height: 1, background: "var(--border-1)" }} />
+
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
-          {sidebarItems.map((item) => (
-            <div key={item.name}>
-              {item.children ? (
-                <div>
-                  <button
-                    onClick={() => !isCollapsed && toggleExpanded(item.name)}
-                    className={cn(
-                      "w-full flex items-center justify-between px-3 py-2.5 text-sm rounded-xl transition-all duration-200",
-                      "text-slate-400 hover:bg-indigo-600/10 hover:text-white"
+        <nav
+          className={cn("flex-1 overflow-y-auto py-3", isCollapsed ? "px-2" : "px-3")}
+        >
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            {sidebarItems.map((item) => (
+              <div key={item.name}>
+                {item.children ? (
+                  <div>
+                    <button
+                      onClick={() => !isCollapsed && toggleExpanded(item.name)}
+                      title={isCollapsed ? item.name : undefined}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "8px 12px",
+                        borderRadius: "var(--radius-sm)",
+                        border: "none",
+                        background: "transparent",
+                        cursor: "pointer",
+                        fontSize: 13.5,
+                        fontWeight: 400,
+                        color: "var(--graphite-600)",
+                        transition: "background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out)",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = "var(--graphite-50)"
+                        e.currentTarget.style.color = "var(--graphite-900)"
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = "transparent"
+                        e.currentTarget.style.color = "var(--graphite-600)"
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: isCollapsed ? 0 : 11,
+                          justifyContent: isCollapsed ? "center" : "flex-start",
+                          width: isCollapsed ? "100%" : undefined,
+                        }}
+                      >
+                        <item.icon style={{ width: 18, height: 18, flexShrink: 0 }} strokeWidth={1.5} />
+                        {!isCollapsed && <span style={{ fontWeight: 400 }}>{item.name}</span>}
+                      </div>
+                      {!isCollapsed &&
+                        (expandedItems.includes(item.name) ? (
+                          <ChevronDown style={{ width: 14, height: 14, flexShrink: 0, color: "var(--graphite-400)" }} strokeWidth={1.5} />
+                        ) : (
+                          <ChevronRight style={{ width: 14, height: 14, flexShrink: 0, color: "var(--graphite-400)" }} strokeWidth={1.5} />
+                        ))}
+                    </button>
+                    {!isCollapsed && expandedItems.includes(item.name) && (
+                      <div style={{ marginLeft: 28, marginTop: 2, display: "flex", flexDirection: "column", gap: 2 }}>
+                        {item.children.map((child) => {
+                          const isActive = pathname === child.href
+                          return (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 10,
+                                padding: "6px 12px",
+                                borderRadius: "var(--radius-sm)",
+                                fontSize: 13,
+                                fontWeight: isActive ? 500 : 400,
+                                color: isActive ? "var(--ink)" : "var(--graphite-600)",
+                                background: isActive ? "var(--mist-bg)" : "transparent",
+                                textDecoration: "none",
+                                transition: "background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out)",
+                              }}
+                            >
+                              <child.icon style={{ width: 15, height: 15, flexShrink: 0 }} strokeWidth={1.5} />
+                              <span>{child.name}</span>
+                            </Link>
+                          )
+                        })}
+                      </div>
                     )}
-                    title={isCollapsed ? item.name : undefined}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <item.icon className="w-5 h-5 flex-shrink-0" />
-                      {!isCollapsed && <span className="font-medium">{item.name}</span>}
-                    </div>
-                    {!isCollapsed &&
-                      (expandedItems.includes(item.name) ? (
-                        <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                      ) : (
-                        <ChevronRight className="w-4 h-4 flex-shrink-0" />
-                      ))}
-                  </button>
-                  {!isCollapsed && expandedItems.includes(item.name) && (
-                    <div className="ml-8 mt-1 space-y-1">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          className={cn(
-                            "flex items-center space-x-3 px-3 py-2 text-sm rounded-xl transition-all duration-200",
-                            pathname === child.href
-                              ? "bg-indigo-600 text-white"
-                              : "text-slate-400 hover:bg-indigo-600/10 hover:text-white"
-                          )}
-                        >
-                          <child.icon className="w-4 h-4 flex-shrink-0" />
-                          <span className="font-medium">{child.name}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <Link
-                  href={item.href!}
-                  className={cn(
-                    "flex items-center space-x-3 px-3 py-2.5 text-sm rounded-xl transition-all duration-200",
-                    pathname === item.href
-                      ? "bg-indigo-600 text-white"
-                      : "text-slate-400 hover:bg-indigo-600/10 hover:text-white"
-                  )}
-                  title={isCollapsed ? item.name : undefined}
-                >
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
-                  {!isCollapsed && <span className="font-medium">{item.name}</span>}
-                </Link>
-              )}
-            </div>
-          ))}
+                  </div>
+                ) : (
+                  (() => {
+                    const isActive = pathname === item.href
+                    return (
+                      <Link
+                        href={item.href!}
+                        title={isCollapsed ? item.name : undefined}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: isCollapsed ? 0 : 11,
+                          justifyContent: isCollapsed ? "center" : "flex-start",
+                          padding: "8px 12px",
+                          borderRadius: "var(--radius-sm)",
+                          fontSize: 13.5,
+                          fontWeight: isActive ? 500 : 400,
+                          color: isActive ? "var(--ink)" : "var(--graphite-600)",
+                          background: isActive ? "var(--mist-bg)" : "transparent",
+                          textDecoration: "none",
+                          transition: "background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out)",
+                        }}
+                      >
+                        <item.icon style={{ width: 18, height: 18, flexShrink: 0 }} strokeWidth={1.5} />
+                        {!isCollapsed && <span>{item.name}</span>}
+                      </Link>
+                    )
+                  })()
+                )}
+              </div>
+            ))}
+          </div>
         </nav>
 
+        {/* Collapse expand button when collapsed */}
+        {isCollapsed && (
+          <div style={{ padding: "0 8px 12px" }}>
+            <button
+              onClick={() => setIsCollapsed(false)}
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 8,
+                borderRadius: "var(--radius-sm)",
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                color: "var(--graphite-400)",
+              }}
+            >
+              <ChevronRight style={{ width: 14, height: 14 }} strokeWidth={1.5} />
+            </button>
+          </div>
+        )}
+
         {/* Logout */}
-        <div className="p-3 border-t border-indigo-600/20 rounded-b-3xl">
+        <div style={{ borderTop: "1px solid var(--border-1)", padding: isCollapsed ? "8px" : "8px 12px" }}>
           <button
             onClick={handleLogout}
-            className={cn(
-              "w-full flex items-center space-x-3 px-3 py-2.5 text-sm rounded-xl transition-all duration-200",
-              "text-slate-400 hover:bg-rose-600/10 hover:text-rose-400"
-            )}
             title={isCollapsed ? "Logout" : undefined}
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              gap: isCollapsed ? 0 : 11,
+              justifyContent: isCollapsed ? "center" : "flex-start",
+              padding: "8px 12px",
+              borderRadius: "var(--radius-sm)",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              fontSize: 13.5,
+              color: "var(--graphite-600)",
+              transition: "background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "var(--danger-soft)"
+              e.currentTarget.style.color = "var(--danger)"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent"
+              e.currentTarget.style.color = "var(--graphite-600)"
+            }}
           >
-            <LogOut className="w-5 h-5 flex-shrink-0" />
-            {!isCollapsed && <span className="font-medium">Logout</span>}
+            <LogOut style={{ width: 18, height: 18, flexShrink: 0 }} strokeWidth={1.5} />
+            {!isCollapsed && <span style={{ fontWeight: 400 }}>Sign out</span>}
           </button>
         </div>
       </div>
