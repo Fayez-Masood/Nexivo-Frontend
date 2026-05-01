@@ -1,9 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import React, { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import {
   ChevronLeft,
@@ -18,7 +15,6 @@ import {
   Filter,
   Calendar,
   Hash,
-  ArrowLeft,
 } from "lucide-react"
 import {
   AlertDialog,
@@ -47,13 +43,13 @@ type Message = {
 
 const Cookies = {
   get: (key: string) => {
-    if (typeof document !== 'undefined') {
+    if (typeof document !== "undefined") {
       const value = `; ${document.cookie}`
       const parts = value.split(`; ${key}=`)
-      if (parts.length === 2) return parts.pop()?.split(';').shift()
+      if (parts.length === 2) return parts.pop()?.split(";").shift()
     }
-    return ''
-  }
+    return ""
+  },
 }
 
 function CallsTab() {
@@ -79,46 +75,34 @@ function CallsTab() {
 
   const [pageInput, setPageInput] = useState("")
 
-  const router = useRouter()
   const { toast } = useToast()
 
   const format = (d: Date) => d.toISOString().split("T")[0]
 
   const handleDelete = async (session_id: string) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/conversations/messages/delete-by-session/`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Token ${Cookies.get("Token") || ""}`,
-        },
-        body: JSON.stringify({ session_id }),
-      })
-
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/conversations/messages/delete-by-session/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${Cookies.get("Token") || ""}`,
+          },
+          body: JSON.stringify({ session_id }),
+        }
+      )
       if (!res.ok) throw new Error("Failed to delete conversation")
-
       setMessages((prev) => prev.filter((m) => m.session_id !== session_id))
-      toast({
-        title: "Conversation deleted",
-        description: `Session ${session_id} was removed successfully.`,
-        className: "bg-green-50 border-green-400 text-green-800",
-      })
+      toast({ title: "Conversation deleted", description: `Session ${session_id} was removed.` })
     } catch (err: any) {
-      toast({
-        title: "Error deleting conversation",
-        description: err.message,
-        className: "bg-red-50 border-red-400 text-red-800",
-      })
+      toast({ title: "Error deleting conversation", description: err.message, variant: "destructive" })
     }
   }
 
   const exportCSV = () => {
     if (!messages || messages.length === 0) {
-      toast({
-        title: "No data to export",
-        description: "There are no messages to download.",
-        className: "bg-yellow-50 border-yellow-400 text-yellow-800",
-      })
+      toast({ title: "No data to export", description: "There are no messages to download.", variant: "destructive" })
       return
     }
 
@@ -128,27 +112,13 @@ function CallsTab() {
       return acc
     }, {} as Record<string, Message[]>)
 
-    const headers = [
-      "id",
-      "session_id",
-      "timestamp",
-      "type",
-      "user_question",
-      "assistant_response",
-      "summary",
-      "phonenumber",
-      "caller_number",
-    ]
-
+    const headers = ["id", "session_id", "timestamp", "type", "user_question", "assistant_response", "summary", "phonenumber", "caller_number"]
     const rows: string[] = []
 
     Object.entries(grouped)
       .sort((a, b) => new Date(a[1][0].timestamp).getTime() - new Date(b[1][0].timestamp).getTime())
       .forEach(([session_id, msgs]) => {
-        const sortedMsgs = msgs.sort(
-          (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-        )
-
+        const sortedMsgs = msgs.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
         const firstMsg = sortedMsgs[0]
         const summaryMsg = sortedMsgs.find((m) => m.type === "summary")
         const phoneNumber = firstMsg.phonenumber || "Unknown"
@@ -158,67 +128,37 @@ function CallsTab() {
           ? Math.floor((new Date(summaryMsg.timestamp).getTime() - new Date(firstMsg.timestamp).getTime()) / 1000) + "s"
           : "N/A"
 
-        const sessionRow = [
-          `"Session Info"`,
-          `"${session_id}"`,
-          `"${startedAt}"`,
-          `"${callDuration}"`,
-          `"${phoneNumber}"`,
-          `"${callerNumber}"`,
-          `"Summary: ${summaryMsg?.summary?.replace(/"/g, '""') || "N/A"}"`,
-          "",
-          "",
-        ].join(",")
-        rows.push(sessionRow)
-
+        rows.push(
+          [`"Session Info"`, `"${session_id}"`, `"${startedAt}"`, `"${callDuration}"`, `"${phoneNumber}"`, `"${callerNumber}"`, `"Summary: ${summaryMsg?.summary?.replace(/"/g, '""') || "N/A"}"`, "", ""].join(",")
+        )
         sortedMsgs.forEach((m) => {
-          const row = headers
-            .map((h) => {
-              let val = (m as any)[h] ?? ""
-              if (typeof val === "string") val = val.replace(/"/g, '""')
-              return `"${val}"`
-            })
-            .join(",")
-          rows.push(row)
+          rows.push(headers.map((h) => {
+            let val = (m as any)[h] ?? ""
+            if (typeof val === "string") val = val.replace(/"/g, '""')
+            return `"${val}"`
+          }).join(","))
         })
-
         rows.push("")
       })
 
-    const csvContent = [headers.join(","), ...rows].join("\n")
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+    const blob = new Blob([[headers.join(","), ...rows].join("\n")], { type: "text/csv;charset=utf-8;" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
     a.download = `conversations_export_${Date.now()}.csv`
     a.click()
     URL.revokeObjectURL(url)
-
-    toast({
-      title: "Exported Successfully",
-      description: "Your CSV file is ready.",
-      className: "bg-green-50 border-green-400 text-green-800",
-    })
-  }
-
-  const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setPageInput(value)
+    toast({ title: "Exported successfully", description: "Your CSV file is ready." })
   }
 
   const handlePageInputSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       const pageNum = parseInt(pageInput)
       if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= conversationTotalPages) {
         setCurrentPage(pageNum)
         setPageInput("")
       } else {
-        toast({
-          title: "Invalid page number",
-          description: `Please enter a number between 1 and ${conversationTotalPages}`,
-          className: "bg-red-50 border-red-400 text-red-800",
-        })
+        toast({ title: "Invalid page number", description: `Enter 1–${conversationTotalPages}`, variant: "destructive" })
       }
     }
   }
@@ -227,30 +167,15 @@ function CallsTab() {
     async function fetchNumbers() {
       try {
         setNumbersLoading(true)
-
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/public/company/get-twilio-phones`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${Cookies.get("Token") || ""}`,
-            },
-          }
-        )
-
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/public/company/get-twilio-phones`, {
+          headers: { "Content-Type": "application/json", Authorization: `Token ${Cookies.get("Token") || ""}` },
+        })
         const data = await res.json()
-        console.log("Fetched numbers:", data)
-
-        let nums = data?.twilio_phone_numbers || []
-        setAssignedNumbers(nums)
-
-      } catch (err) {
-        console.error("Failed to load numbers", err)
-      } finally {
+        setAssignedNumbers(data?.twilio_phone_numbers || [])
+      } catch { /* silent */ } finally {
         setNumbersLoading(false)
       }
     }
-
     fetchNumbers()
   }, [])
 
@@ -262,60 +187,22 @@ function CallsTab() {
 
         const params = new URLSearchParams()
         params.append("page", currentPage.toString())
-
-        if (searchTerm.trim() !== "") {
-          params.append("search", searchTerm.trim())
-        }
+        if (searchTerm.trim()) params.append("search", searchTerm.trim())
 
         const today = new Date()
+        if (dateFilter === "7days")  { const d = new Date(today); d.setDate(d.getDate() - 7);  params.append("date_from", format(d)); params.append("date_to", format(today)) }
+        if (dateFilter === "10days") { const d = new Date(today); d.setDate(d.getDate() - 10); params.append("date_from", format(d)); params.append("date_to", format(today)) }
+        if (dateFilter === "30days") { const d = new Date(today); d.setDate(d.getDate() - 30); params.append("date_from", format(d)); params.append("date_to", format(today)) }
+        if (dateFilter === "custom" && customStart && customEnd) { params.append("date_from", customStart); params.append("date_to", customEnd) }
+        if (selectedNumber) params.append("search", selectedNumber)
 
-        if (dateFilter === "7days") {
-          const d = new Date(today)
-          d.setDate(d.getDate() - 7)
-          params.append("date_from", format(d))
-          params.append("date_to", format(today))
-        }
-
-        if (dateFilter === "10days") {
-          const d = new Date(today)
-          d.setDate(d.getDate() - 10)
-          params.append("date_from", format(d))
-          params.append("date_to", format(today))
-        }
-
-        if (dateFilter === "30days") {
-          const d = new Date(today)
-          d.setDate(d.getDate() - 30)
-          params.append("date_from", format(d))
-          params.append("date_to", format(today))
-        }
-
-        if (dateFilter === "custom" && customStart && customEnd) {
-          params.append("date_from", customStart)
-          params.append("date_to", customEnd)
-        }
-
-        if (selectedNumber !== "") {
-          params.append("search", selectedNumber)
-        }
-
-        console.log("hey", params.toString())
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/conversations/messages/conversations/?${params.toString()}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Token ${Cookies.get("Token") || ""}`,
-            },
-          }
+          { headers: { "Content-Type": "application/json", Authorization: `Token ${Cookies.get("Token") || ""}` } }
         )
-
         if (!res.ok) throw new Error("Failed to fetch messages")
-
         const data = await res.json()
-        const groupedResults = data.results ? Object.values(data.results).flat() : []
-        setMessages(groupedResults)
+        setMessages(data.results ? Object.values(data.results).flat() as Message[] : [])
         setConversationTotalPages(data.total_pages || 1)
       } catch (err: any) {
         setError(err.message)
@@ -324,7 +211,6 @@ function CallsTab() {
         setPageLoading(false)
       }
     }
-
     fetchMessages()
   }, [currentPage, triggerSearch, dateFilter, customStart, customEnd, selectedNumber])
 
@@ -334,515 +220,503 @@ function CallsTab() {
     return acc
   }, {})
 
-  const sortedSessions = Object.entries(grouped).sort((a, b) => {
-    const firstA = new Date(a[1][0].timestamp).getTime()
-    const firstB = new Date(b[1][0].timestamp).getTime()
-    return firstB - firstA
-  })
+  const sortedSessions = Object.entries(grouped).sort(
+    (a, b) => new Date(b[1][0].timestamp).getTime() - new Date(a[1][0].timestamp).getTime()
+  )
 
   const selectedMessages = selectedSession ? grouped[selectedSession] : null
   const latestSummary = selectedMessages?.find((m) => m.type === "summary") || null
 
   const formatDuration = (ms: number) => {
     const totalSec = Math.floor(ms / 1000)
-    const mins = Math.floor(totalSec / 60)
-    const secs = totalSec % 60
-    return `${mins}m ${secs}s`
+    return `${Math.floor(totalSec / 60)}m ${totalSec % 60}s`
   }
 
-  const formatTime = (timestamp: string) => {
-    const date = new Date(timestamp)
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-  }
+  const formatTime = (ts: string) =>
+    new Date(ts).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })
 
   if (loading)
     return (
-      <div className="flex flex-col justify-center items-center h-screen bg-white">
-        <div className="relative">
-          <div className="w-20 h-20 border-4 border-slate-700 rounded-full"></div>
-          <div className="absolute inset-0 w-20 h-20 border-4 border-emerald-600 rounded-full border-t-transparent animate-spin"></div>
-        </div>
-        <p className="mt-6 text-slate-300 font-light tracking-wide">Loading conversations...</p>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100vh", background: "var(--canvas)", gap: 12 }}>
+        <div style={{ width: 28, height: 28, border: "2px solid var(--border-2)", borderTopColor: "var(--signal)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+        <span style={{ fontSize: 13, color: "var(--fg-3)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>Loading conversations…</span>
+        <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
       </div>
     )
 
-  if (error) return <div className="p-6 text-red-600 text-center">Error: {error}</div>
+  if (error)
+    return <div style={{ padding: 32, color: "var(--danger)", fontSize: 14 }}>Error: {error}</div>
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
-      {/* Left Panel - Conversations List */}
-      <div className={`${selectedSession ? "w-2/5" : "w-full"} flex flex-col bg-white border-r border-slate-200`}>
+    <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "var(--canvas)" }}>
+      {/* ── Left panel ── */}
+      <div
+        style={{
+          width: selectedSession ? "40%" : "100%",
+          display: "flex",
+          flexDirection: "column",
+          background: "var(--paper)",
+          borderRight: "1px solid var(--border-1)",
+          transition: "width var(--dur-base) var(--ease-out)",
+          flexShrink: 0,
+        }}
+      >
         {/* Header */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-900/40 via-emerald-800/30 to-teal-900/40 backdrop-blur-xl border-b border-emerald-700/30 flex-shrink-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-transparent to-emerald-500/5"></div>
-          
-          <div className="relative p-8">
-            <div className="flex items-center gap-4 mb-6">
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all duration-300 backdrop-blur-sm"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <div className="w-1 h-16 bg-gradient-to-b from-emerald-400 via-emerald-600 to-teal-800 rounded-full"></div>
-              <div>
-                <h1 className="text-3xl font-extralight tracking-tight text-white mb-1">
-                  Call History
-                </h1>
-                <p className="text-sm text-emerald-100 font-light tracking-wide">
-                  {sortedSessions.length} conversations
-                </p>
+        <div
+          style={{
+            padding: "20px 20px 0",
+            borderBottom: "1px solid var(--border-1)",
+            flexShrink: 0,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+            <div>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--fg-3)", marginBottom: 2 }}>
+                Conversations
+              </div>
+              <div style={{ fontSize: 15, fontWeight: 500, color: "var(--fg-1)", letterSpacing: "-0.01em" }}>
+                Call History
+              </div>
+              <div style={{ fontSize: 12, color: "var(--fg-4)", marginTop: 2 }}>
+                {sortedSessions.length} sessions
               </div>
             </div>
-            
-            {/* Search Bar */}
-            <div className="relative group">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors duration-300" />
-              <Input
-                placeholder="Search conversations..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && setTriggerSearch((x) => x + 1)}
-                className="pl-14 pr-14 py-6 rounded-2xl bg-white border border-slate-300 text-slate-900 placeholder:text-slate-500 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-300 shadow-sm"
-              />
+            <div style={{ display: "flex", gap: 6 }}>
+              <button
+                onClick={exportCSV}
+                title="Export CSV"
+                style={{
+                  width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center",
+                  borderRadius: "var(--radius-sm)", border: "1px solid var(--border-2)",
+                  background: "var(--paper)", cursor: "pointer", color: "var(--fg-2)",
+                }}
+              >
+                <Download style={{ width: 14, height: 14 }} strokeWidth={1.5} />
+              </button>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`absolute right-4 top-1/2 -translate-y-1/2 p-2.5 rounded-xl transition-all duration-300 ${
-                  showFilters 
-                    ? 'bg-emerald-100 text-emerald-600 rotate-180' 
-                    : 'hover:bg-slate-100 text-slate-500 hover:text-emerald-600'
-                }`}
+                title="Filters"
+                style={{
+                  width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center",
+                  borderRadius: "var(--radius-sm)",
+                  border: `1px solid ${showFilters ? "var(--signal-soft)" : "var(--border-2)"}`,
+                  background: showFilters ? "var(--signal-soft)" : "var(--paper)",
+                  cursor: "pointer",
+                  color: showFilters ? "var(--signal-ink)" : "var(--fg-2)",
+                }}
               >
-                <Filter className="w-5 h-5" />
+                <Filter style={{ width: 14, height: 14 }} strokeWidth={1.5} />
               </button>
             </div>
           </div>
-        </div>
 
-        {/* Filters Panel */}
-        {showFilters && (
-          <div className="relative overflow-hidden bg-slate-50 border-b border-slate-200 flex-shrink-0" style={{ animation: 'slideDown 0.3s ease-out' }}>
-            <div className="relative p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-3">
-                {/* Phone Number Filter */}
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-xs text-slate-700 uppercase tracking-wider font-medium mb-2">
-                    <Hash className="w-3 h-3" />
-                    Phone Number
-                  </label>
-                  <div className="relative">
-                    <select
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-300 appearance-none cursor-pointer"
-                      value={selectedNumber}
-                      onChange={(e) => {
-                        setSelectedNumber(e.target.value)
-                        setTriggerSearch((x) => x + 1)
-                      }}
-                    >
-                      <option value="">All Numbers</option>
-                      {assignedNumbers.map((num, i) => (
-                        <option key={i} value={num}>
-                          {num}
-                        </option>
-                      ))}
-                    </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
+          {/* Search */}
+          <div style={{ position: "relative", marginBottom: 14 }}>
+            <Search style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", width: 14, height: 14, color: "var(--fg-4)" }} strokeWidth={1.5} />
+            <input
+              style={{
+                width: "100%", paddingLeft: 34, paddingRight: 12, paddingTop: 9, paddingBottom: 9,
+                borderRadius: "var(--radius-sm)", border: "1px solid var(--border-1)",
+                background: "var(--graphite-50)", fontSize: 13, color: "var(--fg-1)",
+                outline: "none", boxSizing: "border-box",
+              }}
+              placeholder="Search conversations…"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && setTriggerSearch((x) => x + 1)}
+            />
+          </div>
+
+          {/* Filters panel */}
+          {showFilters && (
+            <div style={{ paddingBottom: 14, display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "var(--fg-4)", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "var(--font-mono)", marginBottom: 5 }}>
+                    <Hash style={{ width: 10, height: 10 }} strokeWidth={1.5} /> Phone
                   </div>
+                  <select
+                    value={selectedNumber}
+                    onChange={(e) => { setSelectedNumber(e.target.value); setTriggerSearch((x) => x + 1) }}
+                    style={{
+                      width: "100%", padding: "8px 10px", borderRadius: "var(--radius-sm)",
+                      border: "1px solid var(--border-1)", background: "var(--graphite-50)",
+                      fontSize: 12, color: "var(--fg-1)", outline: "none",
+                    }}
+                  >
+                    <option value="">All Numbers</option>
+                    {assignedNumbers.map((num, i) => <option key={i} value={num}>{num}</option>)}
+                  </select>
                 </div>
-
-                {/* Date Filter */}
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-xs text-slate-700 uppercase tracking-wider font-medium mb-2">
-                    <Calendar className="w-3 h-3" />
-                    Time Period
-                  </label>
-                  <div className="relative">
-                    <select
-                      className="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-300 appearance-none cursor-pointer"
-                      value={dateFilter}
-                      onChange={(e) => setDateFilter(e.target.value as any)}
-                    >
-                      <option value="all">All Time</option>
-                      <option value="7days">Last 7 Days</option>
-                      <option value="10days">Last 10 Days</option>
-                      <option value="30days">Last 30 Days</option>
-                      <option value="custom">Custom Range</option>
-                    </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, color: "var(--fg-4)", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "var(--font-mono)", marginBottom: 5 }}>
+                    <Calendar style={{ width: 10, height: 10 }} strokeWidth={1.5} /> Period
                   </div>
+                  <select
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value as any)}
+                    style={{
+                      width: "100%", padding: "8px 10px", borderRadius: "var(--radius-sm)",
+                      border: "1px solid var(--border-1)", background: "var(--graphite-50)",
+                      fontSize: 12, color: "var(--fg-1)", outline: "none",
+                    }}
+                  >
+                    <option value="all">All Time</option>
+                    <option value="7days">Last 7 Days</option>
+                    <option value="10days">Last 10 Days</option>
+                    <option value="30days">Last 30 Days</option>
+                    <option value="custom">Custom Range</option>
+                  </select>
                 </div>
               </div>
-
               {dateFilter === "custom" && (
-                <div className="grid grid-cols-2 gap-3 pt-2" style={{ animation: 'fadeIn 0.3s ease-out' }}>
-                  <Input
-                    type="date"
-                    value={customStart}
-                    onChange={(e) => setCustomStart(e.target.value)}
-                    className="px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-300"
-                  />
-                  <Input
-                    type="date"
-                    value={customEnd}
-                    onChange={(e) => setCustomEnd(e.target.value)}
-                    className="px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-300"
-                  />
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  <input type="date" value={customStart} onChange={(e) => setCustomStart(e.target.value)}
+                    style={{ padding: "8px 10px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-1)", background: "var(--graphite-50)", fontSize: 12, color: "var(--fg-1)", outline: "none" }} />
+                  <input type="date" value={customEnd} onChange={(e) => setCustomEnd(e.target.value)}
+                    style={{ padding: "8px 10px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-1)", background: "var(--graphite-50)", fontSize: 12, color: "var(--fg-1)", outline: "none" }} />
                 </div>
               )}
-
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <button
-                  onClick={() => {
-                    setSearchTerm("")
-                    setDateFilter("all")
-                    setCustomStart("")
-                    setCustomEnd("")
-                    setSelectedNumber("")
-                    setTriggerSearch((x) => x + 1)
-                  }}
-                  className="px-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 hover:border-slate-400 transition-all duration-300 font-light"
-                >
-                  Clear Filters
-                </button>
-                <button
-                  onClick={exportCSV}
-                  className="px-4 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 text-white hover:from-emerald-500 hover:to-emerald-600 transition-all duration-300 font-light flex items-center justify-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Export CSV
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Conversations List */}
-        <div className="flex-1 overflow-y-auto relative" style={{ scrollBehavior: 'smooth', scrollPaddingBottom: '120px' }}>
-          {pageLoading && (
-            <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-md flex items-center justify-center z-10">
-              <div className="relative">
-                <div className="w-12 h-12 border-4 border-slate-700 rounded-full"></div>
-                <div className="absolute inset-0 w-12 h-12 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
-              </div>
+              <button
+                onClick={() => { setSearchTerm(""); setDateFilter("all"); setCustomStart(""); setCustomEnd(""); setSelectedNumber(""); setTriggerSearch((x) => x + 1) }}
+                style={{
+                  padding: "7px 12px", borderRadius: "var(--radius-sm)",
+                  border: "1px solid var(--border-2)", background: "var(--paper)",
+                  fontSize: 12, color: "var(--fg-2)", cursor: "pointer", alignSelf: "flex-start",
+                }}
+              >
+                Clear Filters
+              </button>
             </div>
           )}
+        </div>
 
-          <div className="pb-4">
+        {/* Session list */}
+        <div style={{ flex: 1, overflowY: "auto", position: "relative" }}>
+          {pageLoading && (
+            <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.8)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10 }}>
+              <div style={{ width: 22, height: 22, border: "2px solid var(--border-2)", borderTopColor: "var(--signal)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+            </div>
+          )}
+          <div style={{ padding: "8px 10px", display: "flex", flexDirection: "column", gap: 4 }}>
             {sortedSessions.map(([session_id, msgs]) => {
-              const sortedMsgs = [...msgs].sort(
-                (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-              )
+              const sortedMsgs = [...msgs].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
               const startedAt = new Date(sortedMsgs[0].timestamp)
-              const startedAtMs = startedAt.getTime()
-
               const summaryMsg = sortedMsgs.find((m) => m.type === "summary")
               const endedAtMs = summaryMsg
                 ? new Date(summaryMsg.timestamp).getTime() + 15000
                 : new Date(sortedMsgs[sortedMsgs.length - 1].timestamp).getTime()
-
-              const callDuration = formatDuration(endedAtMs - startedAtMs)
+              const callDuration = formatDuration(endedAtMs - startedAt.getTime())
               const phoneNumber = msgs[0]?.phonenumber || "Unknown"
               const callerNumber = msgs.find((m) => m.caller_number)?.caller_number || "N/A"
               const previewText = summaryMsg
-                ? summaryMsg.summary.split(" ").slice(0, 8).join(" ") + "..."
+                ? summaryMsg.summary.split(" ").slice(0, 8).join(" ") + "…"
                 : "Tap to view transcript"
-
               const isSelected = selectedSession === session_id
 
               return (
-                <div
+                <SessionRow
                   key={session_id}
-                  onClick={() => {
-                    setSelectedSession(session_id)
-                    setViewType("transcript")
-                  }}
-                  className={`relative mx-3 my-2 p-4 rounded-2xl cursor-pointer transition-all duration-300 group ${
-                    isSelected 
-                      ? "bg-emerald-50 shadow-lg shadow-emerald-500/10 border border-emerald-200" 
-                      : "bg-gradient-to-br from-white to-emerald-50/20 hover:from-emerald-50/30 hover:to-white border border-slate-200 hover:border-emerald-200 shadow-sm hover:shadow-md"
-                  }`}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
-                      isSelected
-                        ? "bg-emerald-600"
-                        : "bg-emerald-50 group-hover:bg-emerald-100"
-                    }`}>
-                      <Phone className={`w-5 h-5 transition-colors duration-300 ${
-                        isSelected ? "text-white" : "text-emerald-600 group-hover:text-emerald-700"
-                      }`} />
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-semibold text-slate-900 truncate text-base">{callerNumber}</h3>
-                        <span className={`text-xs font-medium ml-2 transition-colors duration-300 ${
-                          isSelected ? "text-emerald-700" : "text-emerald-600 group-hover:text-emerald-700"
-                        }`}>{formatTime(sortedMsgs[0].timestamp)}</span>
-                      </div>
-                      
-                      <p className="text-xs text-slate-600 mb-1.5 truncate font-medium">{phoneNumber}</p>
-                      
-                      <p className="text-sm text-slate-700 truncate font-normal leading-relaxed mb-2">{previewText}</p>
-                      
-                      <div className="flex items-center gap-3 text-xs">
-                        <span className={`flex items-center gap-1 font-medium transition-colors duration-300 ${
-                          isSelected ? "text-slate-600" : "text-emerald-600 group-hover:text-emerald-700"
-                        }`}>
-                          <Clock className="w-3.5 h-3.5" />
-                          {callDuration}
-                        </span>
-                        <span className={`flex items-center gap-1 font-medium transition-colors duration-300 ${
-                          isSelected ? "text-slate-600" : "text-emerald-600 group-hover:text-emerald-700"
-                        }`}>
-                          <MessageSquare className="w-3.5 h-3.5" />
-                          {msgs.length}
-                        </span>
-                      </div>
-                    </div>
-
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild onClick={(e) => e.stopPropagation()}>
-                        <button className="p-2 hover:bg-red-50 rounded-lg transition-all duration-300 group/delete">
-                          <Trash2 className="w-4 h-4 text-slate-600 group-hover/delete:text-red-500 transition-colors duration-300" />
-                        </button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="bg-slate-900 border border-slate-700">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="text-white">Delete this conversation?</AlertDialogTitle>
-                          <AlertDialogDescription className="text-slate-400">
-                            This will permanently delete all messages under this session.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel className="bg-slate-800 text-white border-slate-700 hover:bg-slate-700">Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            className="bg-red-600 hover:bg-red-700 text-white"
-                            onClick={() => handleDelete(session_id)}
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </div>
+                  session_id={session_id}
+                  callerNumber={callerNumber}
+                  phoneNumber={phoneNumber}
+                  previewText={previewText}
+                  callDuration={callDuration}
+                  msgCount={msgs.length}
+                  time={formatTime(sortedMsgs[0].timestamp)}
+                  isSelected={isSelected}
+                  onSelect={() => { setSelectedSession(session_id); setViewType("transcript") }}
+                  onDelete={() => handleDelete(session_id)}
+                />
               )
             })}
           </div>
         </div>
 
         {/* Pagination */}
-        <div className="relative overflow-hidden bg-white border-t border-slate-200 flex-shrink-0">
-          <div className="relative px-6 py-4 flex items-center justify-center gap-4">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              className="p-2 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-slate-600 font-medium">
-                {currentPage}
-              </span>
-              <span className="text-xs text-slate-400">/</span>
-              <span className="text-sm text-slate-400">
-                {conversationTotalPages}
-              </span>
-            </div>
-
-            <input
-              type="text"
-              value={pageInput}
-              onChange={handlePageInputChange}
-              onKeyDown={handlePageInputSubmit}
-              placeholder="Go to"
-              className="w-20 px-3 py-1.5 text-sm text-center rounded-lg border border-slate-300 text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all duration-200"
-            />
-
-            <button
-              disabled={currentPage === conversationTotalPages}
-              onClick={() => setCurrentPage((p) => Math.min(conversationTotalPages, p + 1))}
-              className="p-2 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+        <div style={{ borderTop: "1px solid var(--border-1)", padding: "10px 16px", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, flexShrink: 0 }}>
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            style={{
+              padding: 6, borderRadius: "var(--radius-xs)", border: "1px solid var(--border-1)",
+              background: "var(--paper)", cursor: currentPage === 1 ? "not-allowed" : "pointer",
+              opacity: currentPage === 1 ? 0.35 : 1, color: "var(--fg-2)", display: "flex",
+            }}
+          >
+            <ChevronLeft style={{ width: 14, height: 14 }} strokeWidth={1.5} />
+          </button>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-2)" }}>
+            {currentPage} / {conversationTotalPages}
+          </span>
+          <input
+            type="text"
+            value={pageInput}
+            onChange={(e) => setPageInput(e.target.value)}
+            onKeyDown={handlePageInputSubmit}
+            placeholder="Go to"
+            style={{
+              width: 56, padding: "5px 8px", textAlign: "center",
+              borderRadius: "var(--radius-xs)", border: "1px solid var(--border-1)",
+              fontSize: 12, color: "var(--fg-1)", outline: "none",
+              fontFamily: "var(--font-mono)",
+            }}
+          />
+          <button
+            disabled={currentPage === conversationTotalPages}
+            onClick={() => setCurrentPage((p) => Math.min(conversationTotalPages, p + 1))}
+            style={{
+              padding: 6, borderRadius: "var(--radius-xs)", border: "1px solid var(--border-1)",
+              background: "var(--paper)", cursor: currentPage === conversationTotalPages ? "not-allowed" : "pointer",
+              opacity: currentPage === conversationTotalPages ? 0.35 : 1, color: "var(--fg-2)", display: "flex",
+            }}
+          >
+            <ChevronRight style={{ width: 14, height: 14 }} strokeWidth={1.5} />
+          </button>
         </div>
       </div>
 
-      {/* Right Panel - Chat View */}
+      {/* ── Right panel ── */}
       {selectedSession && (
-        <div className="w-3/5 flex flex-col">
-          {/* Chat Header */}
-          <div className="relative overflow-hidden bg-[#1b574a] border-b border-emerald-700/40 flex-shrink-0">
-            <div className="relative p-6 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-                  <Phone className="w-6 h-6 text-white" />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--canvas)", overflow: "hidden" }}>
+          {/* Panel header */}
+          <div
+            style={{
+              padding: "14px 20px",
+              borderBottom: "1px solid var(--border-1)",
+              background: "var(--paper)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexShrink: 0,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div
+                style={{
+                  width: 36, height: 36, borderRadius: 9, background: "var(--mist-bg)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}
+              >
+                <Phone style={{ width: 16, height: 16, color: "var(--mist-ink)" }} strokeWidth={1.5} />
+              </div>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 500, color: "var(--fg-1)" }}>
+                  {selectedMessages?.find((m) => m.caller_number)?.caller_number || "Unknown"}
                 </div>
-                <div>
-                  <h2 className="font-light text-white text-lg">
-                    {selectedMessages?.find((m) => m.caller_number)?.caller_number || "Unknown"}
-                  </h2>
-                  <p className="text-sm text-emerald-100 font-light">
-                    {selectedMessages?.[0]?.phonenumber || "Unknown"}
-                  </p>
+                <div style={{ fontSize: 11, color: "var(--fg-4)", fontFamily: "var(--font-mono)" }}>
+                  {selectedMessages?.[0]?.phonenumber || "Unknown"}
                 </div>
               </div>
+            </div>
 
-              <div className="flex items-center gap-2">
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              {(["transcript", "summary"] as const).map((t) => (
                 <button
-                  onClick={() => setViewType("transcript")}
-                  className={`px-5 py-2.5 rounded-xl transition-all duration-300 font-light ${
-                    viewType === "transcript"
-                      ? "bg-emerald-700/80 text-white"
-                      : "text-emerald-100 hover:bg-emerald-800/30 hover:text-white"
-                  }`}
-                >
-                  Transcript
-                </button>
-                <button
-                  onClick={() => setViewType("summary")}
-                  className={`px-5 py-2.5 rounded-xl transition-all duration-300 font-light ${
-                    viewType === "summary"
-                      ? "bg-emerald-700/80 text-white"
-                      : "text-emerald-100 hover:bg-emerald-800/30 hover:text-white"
-                  }`}
-                >
-                  Summary
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedSession(null)
-                    setViewType(null)
+                  key={t}
+                  onClick={() => setViewType(t)}
+                  style={{
+                    padding: "6px 14px", borderRadius: "var(--radius-sm)",
+                    border: `1px solid ${viewType === t ? "var(--signal-soft)" : "var(--border-1)"}`,
+                    background: viewType === t ? "var(--signal-soft)" : "transparent",
+                    color: viewType === t ? "var(--signal-ink)" : "var(--fg-3)",
+                    fontSize: 12, fontWeight: 500, cursor: "pointer",
+                    transition: "all var(--dur-fast) var(--ease-out)",
                   }}
-                  className="p-2.5 hover:bg-emerald-800/30 rounded-xl transition-all duration-300 text-emerald-100 hover:text-white ml-2"
                 >
-                  <X className="w-5 h-5" />
+                  {t.charAt(0).toUpperCase() + t.slice(1)}
                 </button>
-              </div>
+              ))}
+              <button
+                onClick={() => { setSelectedSession(null); setViewType(null) }}
+                style={{
+                  width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center",
+                  borderRadius: "var(--radius-xs)", border: "1px solid var(--border-1)",
+                  background: "var(--paper)", cursor: "pointer", color: "var(--fg-3)", marginLeft: 4,
+                }}
+              >
+                <X style={{ width: 13, height: 13 }} strokeWidth={1.5} />
+              </button>
             </div>
           </div>
 
-          {/* Chat Messages */}
-          <div 
-            className="flex-1 overflow-y-auto p-8 space-y-6 bg-cover bg-center bg-no-repeat" 
-            style={{ 
-              scrollBehavior: 'smooth',
-              backgroundImage: "url('/chat_bg.jpg')"
-            }}
-          >
-            {viewType === "transcript" && (
-              <>
-                {(() => {
-                  const nonSummaryMsgs = selectedMessages
-                    ?.filter((m) => m.type !== "summary")
-                    .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+          {/* Messages / Summary */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "24px 28px", display: "flex", flexDirection: "column", gap: 16 }}>
+            {viewType === "transcript" && (() => {
+              const nonSummaryMsgs = selectedMessages
+                ?.filter((m) => m.type !== "summary")
+                .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
 
-                  if (!nonSummaryMsgs || nonSummaryMsgs.length === 0) {
-                    return (
-                      <div className="flex items-center justify-center h-full">
-                        <div className="text-center">
-                          <div className="w-20 h-20 rounded-3xl bg-slate-200 flex items-center justify-center mx-auto mb-4">
-                            <MessageSquare className="w-10 h-10 text-slate-500" />
-                          </div>
-                          <p className="text-slate-700 font-medium text-lg mb-2">No transcript available</p>
-                          <p className="text-sm text-slate-600 font-normal">This session contains only a summary</p>
-                        </div>
+              if (!nonSummaryMsgs || nonSummaryMsgs.length === 0)
+                return (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, gap: 10, color: "var(--fg-3)" }}>
+                    <MessageSquare style={{ width: 28, height: 28, color: "var(--fg-4)" }} strokeWidth={1.5} />
+                    <span style={{ fontSize: 13 }}>No transcript available</span>
+                  </div>
+                )
+
+              return nonSummaryMsgs.map((m) => (
+                <div key={m.id} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {/* User bubble */}
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <div style={{ maxWidth: "68%" }}>
+                      <div
+                        style={{
+                          background: "var(--signal-soft)",
+                          borderRadius: "var(--radius-lg)",
+                          borderBottomRightRadius: 4,
+                          padding: "10px 14px",
+                          border: "1px solid var(--border-1)",
+                        }}
+                      >
+                        <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg-1)", margin: 0 }}>{m.user_question}</p>
                       </div>
-                    )
-                  }
-
-                  return nonSummaryMsgs.map((m) => (
-                    <div key={m.id} className="space-y-6">
-                      {/* User Message */}
-                      <div className="flex justify-end" style={{ animation: 'fadeIn 0.3s ease-out' }}>
-                        <div className="max-w-[70%]">
-                          <div className="bg-gradient-to-br from-emerald-700 to-emerald-800 text-white rounded-3xl rounded-tr-md px-6 py-4 shadow-xl shadow-emerald-500/10">
-                            <p className="text-sm leading-relaxed font-light">{m.user_question}</p>
-                          </div>
-                          <p className="text-xs text-slate-500 mt-2 text-right font-light">
-                            {formatTime(m.timestamp)}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Assistant Message */}
-                      <div className="flex justify-start" style={{ animation: 'fadeIn 0.3s ease-out' }}>
-                        <div className="max-w-[70%]">
-                          <div className="bg-white rounded-3xl rounded-tl-md px-6 py-4 shadow-lg border border-slate-200">
-                            <p className="text-sm text-slate-900 leading-relaxed font-normal">{m.assistant_response}</p>
-                          </div>
-                          <p className="text-xs text-slate-500 mt-2 font-light">
-                            {formatTime(m.timestamp)}
-                          </p>
-                        </div>
+                      <div style={{ fontSize: 11, color: "var(--fg-4)", textAlign: "right", marginTop: 4, fontFamily: "var(--font-mono)" }}>
+                        {formatTime(m.timestamp)}
                       </div>
                     </div>
-                  ))
-                })()}
-              </>
-            )}
+                  </div>
+                  {/* Assistant bubble */}
+                  <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                    <div style={{ maxWidth: "68%" }}>
+                      <div
+                        style={{
+                          background: "var(--paper)",
+                          borderRadius: "var(--radius-lg)",
+                          borderBottomLeftRadius: 4,
+                          padding: "10px 14px",
+                          border: "1px solid var(--border-1)",
+                          boxShadow: "var(--shadow-sm)",
+                        }}
+                      >
+                        <p style={{ fontSize: 13, lineHeight: 1.6, color: "var(--fg-1)", margin: 0 }}>{m.assistant_response}</p>
+                      </div>
+                      <div style={{ fontSize: 11, color: "var(--fg-4)", marginTop: 4, fontFamily: "var(--font-mono)" }}>
+                        {formatTime(m.timestamp)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            })()}
 
             {viewType === "summary" && (
-              <div className="h-full flex items-start justify-center pt-12">
-                {latestSummary ? (
-                  <div className="max-w-2xl w-full" style={{ animation: 'fadeIn 0.3s ease-out' }}>
-                    <div className="bg-white rounded-3xl p-8 shadow-2xl border border-slate-200">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-                          <MessageSquare className="w-7 h-7 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-slate-900 text-xl mb-1">Call Summary</h3>
-                          <p className="text-sm text-slate-600 font-medium">
-                            {new Date(latestSummary.timestamp).toLocaleString()}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="prose prose-slate max-w-none">
-                        <p className="text-slate-800 leading-relaxed whitespace-pre-wrap font-normal text-base">
-                          {latestSummary.summary}
-                        </p>
+              latestSummary ? (
+                <div
+                  style={{
+                    maxWidth: 600, width: "100%", margin: "0 auto",
+                    background: "var(--paper)", borderRadius: "var(--radius-lg)",
+                    border: "1px solid var(--border-1)", padding: "24px 28px",
+                    boxShadow: "var(--shadow-sm)",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 9, background: "var(--sand-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <MessageSquare style={{ width: 16, height: 16, color: "var(--sand-ink)" }} strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 14, fontWeight: 500, color: "var(--fg-1)" }}>Call Summary</div>
+                      <div style={{ fontSize: 11, color: "var(--fg-4)", fontFamily: "var(--font-mono)" }}>
+                        {new Date(latestSummary.timestamp).toLocaleString()}
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="text-center">
-                    <div className="w-20 h-20 rounded-3xl bg-emerald-50 flex items-center justify-center mx-auto mb-4">
-                      <MessageSquare className="w-10 h-10 text-emerald-600" />
-                    </div>
-                    <p className="text-slate-700 font-medium text-lg mb-2">No summary available</p>
-                    <p className="text-sm text-slate-600 font-normal">Summary will appear here after the call ends</p>
-                  </div>
-                )}
-              </div>
+                  <p style={{ fontSize: 13, lineHeight: 1.7, color: "var(--fg-2)", whiteSpace: "pre-wrap", margin: 0 }}>
+                    {latestSummary.summary}
+                  </p>
+                </div>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flex: 1, gap: 10, color: "var(--fg-3)" }}>
+                  <MessageSquare style={{ width: 28, height: 28, color: "var(--fg-4)" }} strokeWidth={1.5} />
+                  <span style={{ fontSize: 13 }}>No summary available yet</span>
+                </div>
+              )
             )}
           </div>
         </div>
       )}
 
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideDown {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
+      <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
+    </div>
+  )
+}
+
+function SessionRow({
+  session_id, callerNumber, phoneNumber, previewText, callDuration, msgCount, time, isSelected, onSelect, onDelete,
+}: {
+  session_id: string; callerNumber: string; phoneNumber: string; previewText: string
+  callDuration: string; msgCount: number; time: string; isSelected: boolean
+  onSelect: () => void; onDelete: () => void
+}) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <div
+      onClick={onSelect}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        padding: "10px 12px", borderRadius: "var(--radius-md)", cursor: "pointer",
+        background: isSelected ? "var(--mist-bg)" : hovered ? "var(--graphite-50)" : "transparent",
+        border: `1px solid ${isSelected ? "var(--signal-soft)" : hovered ? "var(--border-2)" : "var(--border-1)"}`,
+        transition: "background var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out)",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+        <div
+          style={{
+            width: 34, height: 34, borderRadius: 8, flexShrink: 0,
+            background: isSelected ? "var(--signal-soft)" : "var(--graphite-100)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}
+        >
+          <Phone style={{ width: 14, height: 14, color: isSelected ? "var(--signal-ink)" : "var(--fg-4)" }} strokeWidth={1.5} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}>
+            <span style={{ fontSize: 13, fontWeight: 500, color: "var(--fg-1)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {callerNumber}
+            </span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "var(--fg-4)", flexShrink: 0, marginLeft: 8 }}>{time}</span>
+          </div>
+          <div style={{ fontSize: 11, color: "var(--fg-4)", marginBottom: 3, fontFamily: "var(--font-mono)" }}>{phoneNumber}</div>
+          <div style={{ fontSize: 12, color: "var(--fg-3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 5 }}>{previewText}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "var(--fg-4)", fontFamily: "var(--font-mono)" }}>
+              <Clock style={{ width: 10, height: 10 }} strokeWidth={1.5} />{callDuration}
+            </span>
+            <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "var(--fg-4)", fontFamily: "var(--font-mono)" }}>
+              <MessageSquare style={{ width: 10, height: 10 }} strokeWidth={1.5} />{msgCount}
+            </span>
+          </div>
+        </div>
+        <AlertDialog>
+          <AlertDialogTrigger asChild onClick={(e) => e.stopPropagation()}>
+            <button
+              style={{
+                width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center",
+                borderRadius: "var(--radius-xs)", border: "1px solid transparent", background: "transparent",
+                cursor: "pointer", color: "var(--fg-4)", flexShrink: 0,
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "var(--danger-soft)"; e.currentTarget.style.color = "var(--danger)" }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--fg-4)" }}
+            >
+              <Trash2 style={{ width: 12, height: 12 }} strokeWidth={1.5} />
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent style={{ background: "var(--paper)", border: "1px solid var(--border-1)", borderRadius: "var(--radius-xl)" }}>
+            <AlertDialogHeader>
+              <AlertDialogTitle style={{ color: "var(--fg-1)", fontSize: 16 }}>Delete this conversation?</AlertDialogTitle>
+              <AlertDialogDescription style={{ color: "var(--fg-3)", fontSize: 13 }}>
+                This will permanently delete all messages under this session.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel style={{ background: "var(--paper)", border: "1px solid var(--border-2)", color: "var(--fg-1)" }}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={onDelete} style={{ background: "var(--danger)", border: "1px solid var(--danger)", color: "#fff" }}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   )
 }
