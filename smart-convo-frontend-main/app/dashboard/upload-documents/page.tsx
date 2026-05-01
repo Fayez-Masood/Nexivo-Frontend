@@ -413,7 +413,7 @@ export default function UploadDocumentsPage() {
         throw new Error("S3 Upload failed.")
       }
         
-      const s3Key = presignedData.file_key // ← Correct
+      const s3Key = presignedData.file_key ?? presignedData.s3_key
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/documents/documents/`, {
         method: "POST",
