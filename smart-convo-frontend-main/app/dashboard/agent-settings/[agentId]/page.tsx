@@ -2509,7 +2509,8 @@ function AgentConfigTab({ agentId }: AgentConfigTabProps) {
 
         <div className="flex justify-end pt-6">
           <Button
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg text-white px-10 py-3 text-sm font-semibold rounded-xl transition-all duration-200"
+            className="shadow-lg text-white px-10 py-3 text-sm font-semibold rounded-xl transition-all duration-200"
+            style={{ background: "var(--ink)" }}
             onClick={handleSave}
           >
             💾 Save All Changes
@@ -3659,7 +3660,7 @@ export default function AgentConfigPage({ params }: { params: Promise<{ agentId:
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50/50">
+    <div className="min-h-screen" style={{ background: "var(--canvas)" }}>
       {/* Hero Header Section */}
       <div className="relative overflow-hidden border-b border-slate-100/50">
         {/* Ambient Background Effects */}
@@ -3738,20 +3739,24 @@ export default function AgentConfigPage({ params }: { params: Promise<{ agentId:
                 className={cn(
                   "relative px-6 py-3.5 text-sm font-light tracking-wide rounded-xl transition-all duration-300 whitespace-nowrap animate-fadeIn",
                   tab.id === activeTab
-                    ? "bg-slate-900 text-white shadow-lg scale-105"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-white/80 hover:shadow-md"
+                    ? "text-white shadow-lg scale-105"
+                    : "hover:bg-white/80 hover:shadow-md"
                 )}
+                style={
+                  tab.id === activeTab
+                    ? { background: "var(--signal)" }
+                    : { color: "var(--fg-3)" }
+                }
               >
                 {tab.id === activeTab && (
                   <>
-                    <div className="absolute inset-0 bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 rounded-xl" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent rounded-xl" />
+                    <div className="absolute inset-0 rounded-xl" style={{ background: "var(--signal)" }} />
                   </>
                 )}
                 <span className="relative z-10 flex items-center gap-2">
                   {tab.label}
                   {tab.id === activeTab && (
-                    <div className="w-1 h-1 bg-blue-400 rounded-full animate-pulse" />
+                    <div className="w-1 h-1 rounded-full animate-pulse" style={{ background: "var(--signal-ink)" }} />
                   )}
                 </span>
               </button>

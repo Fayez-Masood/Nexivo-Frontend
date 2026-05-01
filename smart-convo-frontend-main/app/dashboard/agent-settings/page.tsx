@@ -121,7 +121,7 @@ function AgentSelection({ onSelectAgent }: { onSelectAgent: (agent: any) => void
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--canvas)] flex items-center justify-center">
         <div className="relative">
           {/* Animated circles */}
           <div className="absolute inset-0 flex items-center justify-center">
@@ -146,7 +146,7 @@ function AgentSelection({ onSelectAgent }: { onSelectAgent: (agent: any) => void
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[var(--canvas)]">
       <div className="max-w-7xl mx-auto px-8 py-16">
         {/* Cinematic Header */}
         <div className="mb-16 relative">
@@ -227,18 +227,19 @@ function AgentSelection({ onSelectAgent }: { onSelectAgent: (agent: any) => void
                 {/* Status indicator bar */}
                 <div className={`absolute top-0 left-0 right-0 h-1 ${
                   agent.status === "Active" 
-                    ? "bg-gradient-to-r from-green-400 to-green-600" 
-                    : "bg-gradient-to-r from-red-400 to-red-600"
+                    ? "bg-[var(--success)]"
+                    : "bg-[var(--danger)]"
                 }`} />
 
                 <CardHeader className="pb-4 pt-8 relative">
                   <div className="flex items-start justify-between mb-4">
                     {/* Agent initial circle */}
-                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-light transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${
-                      agent.status === "Active"
-                        ? "bg-gradient-to-br from-green-50 to-green-100 text-green-700"
-                        : "bg-gradient-to-br from-red-50 to-red-100 text-red-700"
-                    }`}>
+                    <div
+                      className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-light transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${
+                        agent.status === "Active" ? "text-[var(--success)]" : "text-[var(--danger)]"
+                      }`}
+                      style={{ background: agent.status === "Active" ? "var(--success-soft)" : "var(--danger-soft)" }}
+                    >
                       {agent.name.charAt(0).toUpperCase()}
                     </div>
 
@@ -279,7 +280,8 @@ function AgentSelection({ onSelectAgent }: { onSelectAgent: (agent: any) => void
                   {/* Configure button */}
                   <Button 
                     size="sm"
-                    className="w-full bg-slate-900 hover:bg-slate-800 text-white rounded-xl py-6 transition-all duration-300 group-hover:shadow-lg font-light tracking-wide"
+                    className="w-full text-white rounded-xl py-6 transition-all duration-300 group-hover:shadow-lg font-light tracking-wide"
+                    style={{ background: "var(--ink)" }}
                   >
                     <span className="flex items-center justify-center gap-2">
                       Configure
