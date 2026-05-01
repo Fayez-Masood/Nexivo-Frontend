@@ -1049,13 +1049,9 @@ function FAQTab({ agentId }: { agentId: string }) {
   }, [agentId])
 
   const fetchFAQs = async () => {
-    try {
-      const response = await fetch(`/api/agents/${agentId}/faqs`)
-      const data = await response.json()
-      setFaqs(data)
-    } catch (error) {
-      console.error("Error fetching FAQs:", error)
-    }
+    // FAQs are stored as uploaded documents associated with this agent.
+    // The fetchDocuments() call already loads those — no separate FAQ endpoint needed.
+    setFaqs([])
   }
 
   const fetchDocuments = async () => {
@@ -1120,7 +1116,7 @@ function FAQTab({ agentId }: { agentId: string }) {
       }
 
       const uploadUrl = presignedData.url
-      const s3Key = presignedData.s3_key  // backend field is s3_key, not file_key
+      const s3Key = presignedData.file_key ?? presignedData.s3_key
 
       // Step 2 — PUT the file directly to S3 via the presigned URL
       const s3Res = await fetch(uploadUrl, {
@@ -1142,7 +1138,7 @@ function FAQTab({ agentId }: { agentId: string }) {
           title: file.name,
           description: "FAQ Document",
           s3_url: uploadUrl.split("?")[0],
-          s3_key: s3Key,
+          file_key: s3Key,
           agent_id: agentId,
         })
       })
