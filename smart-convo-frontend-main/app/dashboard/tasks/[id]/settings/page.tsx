@@ -48,7 +48,7 @@ export default function TaskSettingsPage() {
           onClick={() => setTaskDescriptionExpanded(!taskDescriptionExpanded)}
           className="w-full px-6 py-4 flex items-center justify-between text-left border-b border-gray-200"
         >
-          <h2 className="text-lg font-medium text-blue-600">Task Description</h2>
+          <h2 className="text-lg font-medium" style={{ color: "var(--signal-ink)" }}>Task Description</h2>
           {taskDescriptionExpanded ? (
             <ChevronUp className="w-5 h-5 text-gray-400" />
           ) : (
@@ -132,7 +132,7 @@ export default function TaskSettingsPage() {
               </p>
             </div>
 
-            <Button className="bg-teal-600 hover:bg-teal-700">Switch to Prompt Tool</Button>
+            <Button style={{ background: "var(--signal)" }}>Switch to Prompt Tool</Button>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -202,7 +202,7 @@ export default function TaskSettingsPage() {
 
       {/* Action Buttons */}
       <div className="flex space-x-4">
-        <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700">
+        <Button onClick={handleSave} style={{ background: "var(--signal)" }}>
           SAVE
         </Button>
         <Button onClick={handleCancel} variant="outline">
@@ -213,7 +213,6 @@ export default function TaskSettingsPage() {
       {/* Footer */}
       <div className="text-center text-sm text-gray-500 space-y-1 pt-8">
         <p>© 2025 All rights reserved.</p>
-        <p>Browser Session ID: f4f2fc7d-7161-4d53-ae5f-6bd14515f55b 📋</p>
       </div>
     </div>
   )

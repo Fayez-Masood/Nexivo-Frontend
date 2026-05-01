@@ -566,7 +566,7 @@ const handleAddWorker = async (workerId: number) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
+      <div style={{ minHeight: "100vh", background: "var(--canvas)" }} className="flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-slate-400 animate-spin" />
       </div>
     )
@@ -574,7 +574,7 @@ const handleAddWorker = async (workerId: number) => {
 
   if (!agentData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
+      <div style={{ minHeight: "100vh", background: "var(--canvas)" }} className="flex items-center justify-center">
         <Card className="bg-white border-0 shadow-sm max-w-md">
           <CardContent className="text-center py-12">
             <p className="text-slate-500 font-light">Agent not found</p>
@@ -595,7 +595,7 @@ const handleAddWorker = async (workerId: number) => {
   const totalWorkers = agentData.worker_agents.length
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div style={{ minHeight: "100vh", background: "var(--canvas)" }}>
       <div className="container mx-auto px-6 py-12 max-w-7xl">
         {/* Header */}
         <div className="mb-12">
@@ -611,8 +611,8 @@ const handleAddWorker = async (workerId: number) => {
           <div className="space-y-6">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
-                <Avatar className="w-16 h-16 bg-slate-900">
-                  <AvatarFallback className="bg-slate-900 text-white font-light text-2xl">
+                <Avatar className="w-16 h-16">
+                  <AvatarFallback style={{ background: "var(--mist-bg)", color: "var(--signal-ink)", fontWeight: 400 }} className="text-2xl">
                     {agentData.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -631,7 +631,7 @@ const handleAddWorker = async (workerId: number) => {
                 )}
                 <Button
                   onClick={openAddWorkerDialog}
-                  className="bg-slate-900 hover:bg-slate-800 text-white"
+                  style={{ background: "var(--signal)", color: "white" }}
                   disabled={updatingWorkers}
                 >
                   <Plus className="w-4 h-4 mr-2" />
@@ -650,7 +650,7 @@ const handleAddWorker = async (workerId: number) => {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-1 h-12 bg-emerald-500 rounded-full" />
+                <div className="w-1 h-12 bg-[var(--success)] rounded-full" />
                 <div>
                   <p className="text-3xl font-light text-slate-900">{activeWorkers}</p>
                   <p className="text-sm text-slate-500">Active Workers</p>
@@ -671,7 +671,7 @@ const handleAddWorker = async (workerId: number) => {
         {agentData.worker_agents.length === 0 ? (
           <Card className="bg-white border-0 shadow-sm">
             <CardContent className="text-center py-20">
-              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div style={{ background: "var(--graphite-50)" }} className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Activity className="w-8 h-8 text-slate-400" />
               </div>
               <h3 className="text-xl font-light text-slate-700 mb-2">No Worker Agents</h3>
@@ -698,8 +698,8 @@ const handleAddWorker = async (workerId: number) => {
                 <CardHeader className="pb-4 border-b border-slate-100">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <Avatar className="w-12 h-12 bg-slate-900 flex-shrink-0">
-                        <AvatarFallback className="bg-slate-900 text-white font-light">
+                      <Avatar className="w-12 h-12 flex-shrink-0">
+                        <AvatarFallback style={{ background: "var(--mist-bg)", color: "var(--signal-ink)" }} className="font-light">
                           {worker.name.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
@@ -734,11 +734,11 @@ const handleAddWorker = async (workerId: number) => {
 
                 <CardContent className="pt-4 space-y-4">
                   {/* Status Toggle */}
-                  <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                  <div style={{ background: "var(--graphite-50)" }} className="flex items-center justify-between p-3 rounded-lg">
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-2 h-2 rounded-full ${
-                          worker.status === "active" ? "bg-emerald-500" : "bg-slate-400"
+                          worker.status === "active" ? "bg-[var(--success)]" : "bg-slate-400"
                         }`}
                       />
                       <Label
@@ -752,7 +752,7 @@ const handleAddWorker = async (workerId: number) => {
                       id={`worker-toggle-${worker.id}`}
                       checked={worker.status === "active"}
                       onCheckedChange={() => handleToggleWorkerStatus(worker.id)}
-                      className="data-[state=checked]:bg-emerald-500"
+                      className="data-[state=checked]:bg-[var(--signal)]"
                     />
                   </div>
 
@@ -790,7 +790,7 @@ const handleAddWorker = async (workerId: number) => {
                           <FileText className="w-4 h-4" />
                           <span className="font-light">Instructions</span>
                         </div>
-                        <div className="bg-slate-50 rounded-lg p-3 border-l-2 border-slate-900">
+                        <div style={{ background: "var(--graphite-50)", borderRadius: "var(--radius-sm)", padding: 12, borderLeft: "2px solid var(--signal)" }}>
                           <p className="text-sm text-slate-700 leading-relaxed font-light whitespace-pre-wrap">
                             {expandedInstructions.has(worker.id)
                               ? worker.instructions
@@ -858,8 +858,8 @@ const handleAddWorker = async (workerId: number) => {
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3 flex-1">
-                          <Avatar className="w-10 h-10 bg-slate-900">
-                            <AvatarFallback className="bg-slate-900 text-white font-light text-sm">
+                          <Avatar className="w-10 h-10">
+                            <AvatarFallback style={{ background: "var(--mist-bg)", color: "var(--signal-ink)" }} className="font-light text-sm">
                               {agent.name.charAt(0).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
@@ -870,7 +870,7 @@ const handleAddWorker = async (workerId: number) => {
                             <div className="flex items-center gap-2 mt-1">
                               <div className={`w-2 h-2 rounded-full ${
                                 agent.status === "active" || agent.status === "Active"
-                                  ? "bg-emerald-500"
+                                  ? "bg-[var(--success)]"
                                   : "bg-slate-400"
                               }`} />
                               <span className="text-xs text-slate-500">{agent.status}</span>
@@ -905,7 +905,7 @@ const handleAddWorker = async (workerId: number) => {
         </Dialog>
 
         {/* Footer */}
-        <div className="mt-20 pt-8 border-t border-slate-200">
+        <div style={{ borderTop: "1px solid var(--border-1)" }} className="mt-20 pt-8">
           <div className="text-center">
             <p className="text-sm text-slate-400 font-light">© 2025 All rights reserved</p>
           </div>
