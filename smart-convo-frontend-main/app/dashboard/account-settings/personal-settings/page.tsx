@@ -203,11 +203,6 @@
 // }
 
 
-
-
-
-
-
 "use client"
 
 
@@ -309,7 +304,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
     "MAIL_ENCRYPTION",
     "MAIL_FROM_ADDRESS",
     "MAIL_FROM_NAME",
-    "mail_config", 
+    "mail_config",
   ]
 
 
@@ -570,11 +565,10 @@ const handleFinishTutorial = async () => {
 
   if (initializing) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div style={{ minHeight: "100vh", background: "var(--canvas)" }} className="flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="relative w-20 h-20 mx-auto">
-            <div className="absolute inset-0 border-4 border-slate-200 rounded-full"></div>
-            <div className="absolute inset-0 border-4 border-slate-900 rounded-full border-t-transparent animate-spin"></div>
+          <div className="flex justify-center">
+            <div style={{ width: 48, height: 48, borderRadius: "50%", border: "3px solid var(--border-1)", borderTopColor: "var(--signal)", animation: "spin 0.8s linear infinite" }} />
           </div>
           <p className="text-slate-600 font-light tracking-wide">Loading Settings...</p>
         </div>
@@ -584,18 +578,16 @@ const handleFinishTutorial = async () => {
 
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section - Colorless */}
-      <div className="relative overflow-hidden bg-white border-b border-slate-200">
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-50/50 via-transparent to-slate-50/50"></div>
-        
+    <div style={{ minHeight: "100vh", background: "var(--canvas)" }}>
+      {/* Hero Section */}
+      <div className="relative overflow-hidden border-b" style={{ background: "var(--paper)", borderColor: "var(--border-1)" }}>
         <div className="relative max-w-5xl mx-auto px-8 py-16">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-4"
           >
-            <div className="w-1 h-20 bg-gradient-to-b from-slate-900 via-slate-400 to-slate-200 rounded-full"></div>
+            <div className="w-1 h-20 rounded-full" style={{ background: "var(--ink)" }}></div>
             <div>
               <h1 className="text-5xl font-extralight tracking-tight text-slate-900 mb-2">
                 Settings
@@ -609,21 +601,21 @@ const handleFinishTutorial = async () => {
       </div>
 
       <div className="max-w-5xl mx-auto px-8 py-12 space-y-8">
-        {/* 2FA Section - Indigo accent */}
+        {/* 2FA Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-indigo-50 to-white px-8 py-6 border-b border-indigo-100">
+          <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden">
+            <div className="px-8 py-6" style={{ background: "var(--mist-bg)", borderBottom: "1px solid var(--border-1)" }}>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-indigo-600" />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--mist-bg)" }}>
+                  <Shield className="w-5 h-5" style={{ color: "var(--signal-ink)" }} />
                 </div>
                 <div>
-                  <h2 className="text-xl font-light text-indigo-900">Two-Factor Authentication</h2>
-                  <p className="text-sm text-indigo-600 font-light mt-0.5">
+                  <h2 className="text-xl font-light" style={{ color: "var(--fg-1)" }}>Two-Factor Authentication</h2>
+                  <p className="text-sm font-light mt-0.5" style={{ color: "var(--fg-3)" }}>
                     Secure your account with an extra layer of protection
                   </p>
                 </div>
@@ -631,7 +623,10 @@ const handleFinishTutorial = async () => {
             </div>
 
             <div className="p-8 space-y-6">
-              <div className="flex items-center justify-between p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100">
+              <div
+                className="flex items-center justify-between"
+                style={{ background: "var(--graphite-50)", border: "1px solid var(--border-1)", borderRadius: "var(--radius-md)", padding: 20 }}
+              >
                 <Label htmlFor="2fa" className="text-slate-900 font-light">Enable 2FA</Label>
                 <Switch
                   id="2fa"
@@ -643,15 +638,16 @@ const handleFinishTutorial = async () => {
 
               {loading && (
                 <div className="text-center py-4">
-                  <p className="text-indigo-600 font-light animate-pulse">Loading QR Code...</p>
+                  <p className="font-light animate-pulse" style={{ color: "var(--signal-ink)" }}>Loading QR Code...</p>
                 </div>
               )}
 
               {qrCode && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-center space-y-6 bg-indigo-50/50 rounded-2xl p-8 border border-indigo-100"
+                  className="text-center space-y-6 rounded-2xl p-8"
+                  style={{ background: "var(--graphite-50)", border: "1px solid var(--border-1)" }}
                 >
                   <p className="text-slate-900 font-light">Scan this QR code with your Authenticator App</p>
                   <div className="flex justify-center">
@@ -670,12 +666,14 @@ const handleFinishTutorial = async () => {
                       value={code}
                       onChange={(e) => setCode(e.target.value)}
                       placeholder="123456"
-                      className="text-center tracking-widest text-2xl font-light bg-white border-indigo-200 rounded-xl h-14 focus:ring-2 focus:ring-indigo-400"
+                      className="text-center tracking-widest text-2xl font-light bg-white rounded-xl h-14"
+                      style={{ border: "1px solid var(--border-1)" }}
                     />
                     <Button
                       onClick={handleVerifyCode}
                       disabled={verifying}
-                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl h-12 font-light transition-all duration-200"
+                      className="w-full text-white rounded-xl h-12 font-light transition-all duration-200 hover:opacity-90"
+                      style={{ background: "var(--signal)" }}
                     >
                       {verifying ? "Verifying..." : "Verify Code"}
                     </Button>
@@ -686,22 +684,22 @@ const handleFinishTutorial = async () => {
           </div>
         </motion.div>
 
-        {/* Company Data Section - Blue accent */}
+        {/* Company Data Section */}
         {company && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-50 to-white px-8 py-6 border-b border-blue-100">
+            <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden">
+              <div className="px-8 py-6" style={{ background: "var(--mist-bg)", borderBottom: "1px solid var(--border-1)" }}>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                    <Building2 className="w-5 h-5 text-blue-600" />
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--mist-bg)" }}>
+                    <Building2 className="w-5 h-5" style={{ color: "var(--signal-ink)" }} />
                   </div>
                   <div>
-                    <h2 className="text-xl font-light text-blue-900">Company Information</h2>
-                    <p className="text-sm text-blue-600 font-light mt-0.5">
+                    <h2 className="text-xl font-light" style={{ color: "var(--fg-1)" }}>Company Information</h2>
+                    <p className="text-sm font-light mt-0.5" style={{ color: "var(--fg-3)" }}>
                       Manage and update your company details
                     </p>
                   </div>
@@ -714,22 +712,24 @@ const handleFinishTutorial = async () => {
                     .filter(([field]) =>
                       !NON_EDITABLE_FIELDS.includes(field) &&
                       field !== "tutorial_setup" &&
-                      !SMTP_FIELDS.includes(field) // 🚫 remove SMTP fields
+                      !SMTP_FIELDS.includes(field) // remove SMTP fields
                     )
                     .map(([field, value]) => (
                       <div
                         key={field}
-                        className="p-5 bg-blue-50/30 rounded-2xl border border-blue-100 hover:border-blue-200 transition-all duration-200"
+                        className="p-5 rounded-2xl transition-all duration-200"
+                        style={{ background: "var(--graphite-50)", border: "1px solid var(--border-1)" }}
                       >
                         <div className="flex items-start justify-between mb-3">
-                          <p className="text-sm font-medium text-blue-900 capitalize">
+                          <p className="text-sm font-medium capitalize" style={{ color: "var(--fg-1)" }}>
                             {field.replace("_", " ")}
                           </p>
                           {editingField === field ? (
                             <Button
                               size="sm"
                               onClick={() => handleSaveField(field)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 h-8 font-light flex items-center gap-1"
+                              className="text-white rounded-lg px-3 h-8 font-light flex items-center gap-1 hover:opacity-90"
+                              style={{ background: "var(--signal)" }}
                             >
                               <Save className="w-3 h-3" />
                               Save
@@ -742,7 +742,8 @@ const handleFinishTutorial = async () => {
                                 setEditingField(field)
                                 setTempValue(String(value))
                               }}
-                              className="text-blue-700 hover:bg-blue-100 rounded-lg px-3 h-8 font-light flex items-center gap-1"
+                              className="rounded-lg px-3 h-8 font-light flex items-center gap-1 hover:bg-[var(--mist-bg)]"
+                              style={{ color: "var(--signal-ink)" }}
                             >
                               <Edit3 className="w-3 h-3" />
                               Edit
@@ -755,7 +756,8 @@ const handleFinishTutorial = async () => {
                             <select
                               value={tempValue}
                               onChange={(e) => setTempValue(e.target.value)}
-                              className="w-full border border-blue-200 rounded-xl bg-white p-2.5 font-light text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                              className="w-full rounded-xl bg-white p-2.5 font-light text-sm"
+                              style={{ border: "1px solid var(--border-1)" }}
                             >
                               {INDUSTRY_OPTIONS.map((opt) => (
                                 <option key={opt} value={opt}>{opt}</option>
@@ -765,7 +767,8 @@ const handleFinishTutorial = async () => {
                             <select
                               value={tempValue}
                               onChange={(e) => setTempValue(e.target.value)}
-                              className="w-full border border-blue-200 rounded-xl bg-white p-2.5 font-light text-sm focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                              className="w-full rounded-xl bg-white p-2.5 font-light text-sm"
+                              style={{ border: "1px solid var(--border-1)" }}
                             >
                               {SIZE_OPTIONS.map((opt) => (
                                 <option key={opt} value={opt}>{opt}</option>
@@ -776,7 +779,8 @@ const handleFinishTutorial = async () => {
                               <select
                                 value={countryCode}
                                 onChange={(e) => setCountryCode(e.target.value)}
-                                className="w-full border border-blue-200 rounded-xl bg-white p-2.5 font-light text-sm"
+                                className="w-full rounded-xl bg-white p-2.5 font-light text-sm"
+                                style={{ border: "1px solid var(--border-1)" }}
                               >
                                 {COUNTRY_CODES.map((c) => (
                                   <option key={c.code} value={c.code}>{c.name} ({c.code})</option>
@@ -786,14 +790,16 @@ const handleFinishTutorial = async () => {
                                 value={tempValue}
                                 onChange={(e) => setTempValue(e.target.value)}
                                 placeholder="Phone number"
-                                className="bg-white border-blue-200 rounded-xl font-light text-sm"
+                                className="bg-white rounded-xl font-light text-sm"
+                                style={{ border: "1px solid var(--border-1)" }}
                               />
                             </div>
                           ) : (
                             <Input
                               value={tempValue}
                               onChange={(e) => setTempValue(e.target.value)}
-                              className="bg-white border-blue-200 rounded-xl font-light text-sm"
+                              className="bg-white rounded-xl font-light text-sm"
+                              style={{ border: "1px solid var(--border-1)" }}
                             />
                           )
                         ) : (
@@ -807,22 +813,22 @@ const handleFinishTutorial = async () => {
           </motion.div>
         )}
 
-        {/* SMTP Section - Emerald accent */}
+        {/* SMTP Section */}
         {company && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
-              <div className="bg-gradient-to-r from-emerald-50 to-white px-8 py-6 border-b border-emerald-100">
+            <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden">
+              <div className="px-8 py-6" style={{ background: "var(--sage-bg)", borderBottom: "1px solid var(--border-1)" }}>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-emerald-600" />
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "var(--sage-bg)" }}>
+                    <Mail className="w-5 h-5" style={{ color: "var(--sage-ink)" }} />
                   </div>
                   <div>
-                    <h2 className="text-xl font-light text-emerald-900">SMTP Configuration</h2>
-                    <p className="text-sm text-emerald-600 font-light mt-0.5">
+                    <h2 className="text-xl font-light" style={{ color: "var(--fg-1)" }}>SMTP Configuration</h2>
+                    <p className="text-sm font-light mt-0.5" style={{ color: "var(--fg-3)" }}>
                       Email delivery settings for your workspace
                     </p>
                   </div>
@@ -836,17 +842,19 @@ const handleFinishTutorial = async () => {
                     .map(([field, value]) => (
                       <div
                         key={field}
-                        className="p-5 bg-emerald-50/30 rounded-2xl border border-emerald-100 hover:border-emerald-200 transition-all duration-200"
+                        className="p-5 rounded-2xl transition-all duration-200"
+                        style={{ background: "var(--graphite-50)", border: "1px solid var(--border-1)" }}
                       >
                         <div className="flex items-start justify-between mb-3">
-                          <p className="text-sm font-medium text-emerald-900 capitalize">
+                          <p className="text-sm font-medium capitalize" style={{ color: "var(--fg-1)" }}>
                             {field.replaceAll("_", " ")}
                           </p>
                           {editingField === field ? (
                             <Button
                               size="sm"
                               onClick={() => handleSaveField(field)}
-                              className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 h-8 font-light flex items-center gap-1"
+                              className="text-white rounded-lg px-3 h-8 font-light flex items-center gap-1 hover:opacity-90"
+                              style={{ background: "var(--signal)" }}
                             >
                               <Save className="w-3 h-3" />
                               Save
@@ -859,7 +867,8 @@ const handleFinishTutorial = async () => {
                                 setEditingField(field)
                                 setTempValue(String(value))
                               }}
-                              className="text-emerald-700 hover:bg-emerald-100 rounded-lg px-3 h-8 font-light flex items-center gap-1"
+                              className="rounded-lg px-3 h-8 font-light flex items-center gap-1 hover:bg-[var(--mist-bg)]"
+                              style={{ color: "var(--signal-ink)" }}
                             >
                               <Edit3 className="w-3 h-3" />
                               Edit
@@ -871,7 +880,8 @@ const handleFinishTutorial = async () => {
                           <Input
                             value={tempValue}
                             onChange={(e) => setTempValue(e.target.value)}
-                            className="bg-white border-emerald-200 rounded-xl font-light text-sm"
+                            className="bg-white rounded-xl font-light text-sm"
+                            style={{ border: "1px solid var(--border-1)" }}
                           />
                         ) : (
                           <p className="text-slate-900 font-light text-sm break-all">{String(value) || "—"}</p>
@@ -885,7 +895,7 @@ const handleFinishTutorial = async () => {
         )}
 
         {/* Tutorial Button */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -893,19 +903,14 @@ const handleFinishTutorial = async () => {
         >
           <Button
             onClick={handleFinishTutorial}
-            className="group bg-slate-900 hover:bg-slate-800 text-white px-8 py-6 rounded-2xl shadow-lg font-light text-lg transition-all duration-300 hover:scale-105 flex items-center gap-3"
+            className="group text-white px-8 py-6 rounded-2xl shadow-lg font-light text-lg transition-all duration-300 hover:scale-105 flex items-center gap-3 hover:opacity-90"
+            style={{ background: "var(--signal)" }}
           >
             <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
             Watch Tutorial
             <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
           </Button>
         </motion.div>
-
-        <div className="mt-16 flex items-center justify-center gap-2">
-          <div className="w-1 h-1 bg-slate-300 rounded-full animate-pulse"></div>
-          <div className="w-1 h-1 bg-slate-300 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-1 h-1 bg-slate-300 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-        </div>
       </div>
     </div>
   )

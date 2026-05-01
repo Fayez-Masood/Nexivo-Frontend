@@ -106,7 +106,7 @@ export default function WorkerAgentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div style={{ minHeight: "100vh", background: "var(--canvas)" }}>
       <div className="container mx-auto px-6 py-12 max-w-7xl">
         {/* Header */}
         <div className="mb-12 space-y-6">
@@ -178,7 +178,7 @@ export default function WorkerAgentsPage() {
         ) : filteredAgents.length === 0 ? (
           <Card className="bg-white border-0 shadow-sm">
             <CardContent className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ background: "var(--graphite-50)" }}>
                 <Users className="w-8 h-8 text-slate-400" />
               </div>
               <h3 className="text-xl font-light text-slate-700 mb-2">
@@ -207,8 +207,8 @@ export default function WorkerAgentsPage() {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4 flex-1 min-w-0">
-                        <Avatar className="w-14 h-14 bg-slate-900 flex-shrink-0">
-                          <AvatarFallback className="bg-slate-900 text-white font-light text-lg">
+                        <Avatar className="w-14 h-14 flex-shrink-0">
+                          <AvatarFallback className="font-light text-lg" style={{ background: "var(--mist-bg)", color: "var(--signal-ink)", fontWeight: 400 }}>
                             {agent.name.charAt(0).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
@@ -224,14 +224,14 @@ export default function WorkerAgentsPage() {
                               </Badge>
                             )}
                             {agent.parent !== null && agent.parent !== undefined && (
-                              <Badge variant="outline" className="text-xs font-light border-amber-300 text-amber-700 bg-amber-50">
+                              <span style={{ background: "var(--butter-bg)", color: "var(--butter-ink)", border: "1px solid var(--butter-ink)", borderRadius: "var(--radius-pill)", padding: "2px 10px", fontSize: 11 }}>
                                 Worker
-                              </Badge>
+                              </span>
                             )}
                           </div>
                           <div className="flex items-center gap-4 text-sm text-slate-500">
                             {agent.parent !== null && agent.parent !== undefined ? (
-                              <span className="flex items-center gap-2 text-amber-600">
+                              <span className="flex items-center gap-2" style={{ color: "var(--fg-2)" }}>
                                 Already a worker of {getParentAgentName(agent.parent)}
                               </span>
                             ) : (
@@ -243,7 +243,7 @@ export default function WorkerAgentsPage() {
                                 <span className="flex items-center gap-2">
                                   <div className={`w-2 h-2 rounded-full ${
                                     agent.status === "active" || agent.status === "Active" 
-                                      ? "bg-emerald-500" 
+                                      ? "bg-[var(--success)]"
                                       : "bg-slate-300"
                                   }`} />
                                   {agent.status}
@@ -294,9 +294,10 @@ export default function WorkerAgentsPage() {
                       onClick={() => handlePageChange(page)}
                       className={
                         currentPage === page
-                          ? "bg-slate-900 text-white hover:bg-slate-800"
+                          ? ""
                           : "border-slate-200 text-slate-600 hover:bg-slate-50"
                       }
+                      style={currentPage === page ? { background: "var(--ink)", color: "white" } : undefined}
                     >
                       {page}
                     </Button>
@@ -328,9 +329,9 @@ export default function WorkerAgentsPage() {
         )}
 
         {/* Footer */}
-        <div className="mt-20 pt-8 border-t border-slate-200">
+        <div className="mt-20 pt-8" style={{ borderTop: "1px solid var(--border-1)" }}>
           <div className="text-center">
-            <p className="text-sm text-slate-400 font-light">
+            <p className="text-sm font-light" style={{ color: "var(--fg-4)" }}>
               © 2025 All rights reserved
             </p>
           </div>
@@ -339,8 +340,9 @@ export default function WorkerAgentsPage() {
 
       {/* Dialog */}
       {dialogOpen && selectedAgent && (
-        <div 
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+          style={{ background: "rgba(10,10,10,0.5)" }}
           onClick={() => setDialogOpen(false)}
         >
           <div 
@@ -348,8 +350,8 @@ export default function WorkerAgentsPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-6">
-              <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center">
-                <AlertCircle className="w-6 h-6 text-amber-600" />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "var(--butter-bg)" }}>
+                <AlertCircle className="w-6 h-6" style={{ color: "var(--sand-ink)" }} />
               </div>
               <button
                 onClick={() => setDialogOpen(false)}
@@ -377,7 +379,8 @@ export default function WorkerAgentsPage() {
             <div className="mt-8 flex justify-end">
               <Button
                 onClick={() => setDialogOpen(false)}
-                className="bg-slate-900 text-white hover:bg-slate-800 px-6 rounded-xl"
+                className="px-6 rounded-xl"
+                style={{ background: "var(--signal)", color: "white" }}
               >
                 Got it
               </Button>

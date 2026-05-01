@@ -109,11 +109,11 @@ export default function ContentPage() {
           <h1 className="text-2xl font-bold text-gray-900">Content for 12</h1>
         </div>
         <div className="flex space-x-3">
-          <Button className="bg-green-600 hover:bg-green-700">
+          <Button style={{ background: "var(--signal)" }}>
             <Plus className="w-4 h-4 mr-2" />
             PUBLISH CONTENT (V1)
           </Button>
-          <Button className="bg-green-600 hover:bg-green-700">
+          <Button style={{ background: "var(--signal)" }}>
             <Plus className="w-4 h-4 mr-2" />
             PUBLISH CONTENT (V2)
           </Button>
@@ -208,7 +208,7 @@ export default function ContentPage() {
 
         <Dialog open={websiteDialog} onOpenChange={setWebsiteDialog}>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button style={{ background: "var(--signal)" }}>
               <Globe className="w-4 h-4 mr-2" />
               ADD WEB SITE
             </Button>
@@ -231,7 +231,7 @@ export default function ContentPage() {
                 <Button variant="outline" onClick={() => setWebsiteDialog(false)}>
                   CANCEL
                 </Button>
-                <Button onClick={handleAddWebsite} className="bg-blue-600 hover:bg-blue-700">
+                <Button onClick={handleAddWebsite} style={{ background: "var(--signal)" }}>
                   <Plus className="w-4 h-4 mr-2" />
                   ADD
                 </Button>
@@ -242,7 +242,7 @@ export default function ContentPage() {
 
         <Dialog open={urlDialog} onOpenChange={setUrlDialog}>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button style={{ background: "var(--signal)" }}>
               <LinkIcon className="w-4 h-4 mr-2" />
               ADD SINGLE URL
             </Button>
@@ -260,7 +260,7 @@ export default function ContentPage() {
                 <Button variant="outline" onClick={() => setUrlDialog(false)}>
                   CANCEL
                 </Button>
-                <Button onClick={handleAddUrl} className="bg-blue-600 hover:bg-blue-700">
+                <Button onClick={handleAddUrl} style={{ background: "var(--signal)" }}>
                   <Plus className="w-4 h-4 mr-2" />
                   ADD
                 </Button>
@@ -271,7 +271,7 @@ export default function ContentPage() {
 
         <Dialog open={fileDialog} onOpenChange={setFileDialog}>
           <DialogTrigger asChild>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button style={{ background: "var(--signal)" }}>
               <FileText className="w-4 h-4 mr-2" />
               ADD FILE
             </Button>
@@ -281,7 +281,7 @@ export default function ContentPage() {
               <DialogTitle>Add File</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded">
+              <div style={{ background: "var(--graphite-50)", borderRadius: "var(--radius-sm)", padding: 12, fontSize: 13, color: "var(--fg-3)" }}>
                 <span className="inline-flex items-center">
                   ℹ️ Valid file types: plain text-based files (.txt, .csv, .html, .xml, etc.) as well as PDFs
                 </span>
@@ -295,13 +295,13 @@ export default function ContentPage() {
                   accept=".txt,.csv,.html,.xml,.pdf"
                   className="mt-1"
                 />
-                {!selectedFile && <p className="text-sm text-gray-500 mt-1">No file chosen</p>}
+                {!selectedFile && <p className="text-sm mt-1" style={{ color: "var(--fg-3)" }}>No file chosen</p>}
               </div>
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setFileDialog(false)}>
                   CANCEL
                 </Button>
-                <Button onClick={handleAddFile} className="bg-blue-600 hover:bg-blue-700">
+                <Button onClick={handleAddFile} style={{ background: "var(--signal)" }}>
                   <Plus className="w-4 h-4 mr-2" />
                   ADD
                 </Button>
@@ -317,20 +317,20 @@ export default function ContentPage() {
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b">
+                <thead style={{ background: "var(--graphite-50)", borderBottom: "1px solid var(--border-1)" }}>
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: "var(--fg-3)" }}>
                       Name
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: "var(--fg-3)" }}>
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: "var(--fg-3)" }}>
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="divide-y divide-[var(--border-1)]" style={{ background: "var(--paper)" }}>
                   {contentItems.map((item) => (
                     <tr key={item.id}>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -347,7 +347,7 @@ export default function ContentPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleRemoveItem(item.id)}
-                          className="text-red-600 hover:text-red-800"
+                          style={{ color: "var(--danger)" }}
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
@@ -363,7 +363,7 @@ export default function ContentPage() {
 
       {/* Save Button */}
       <div className="flex justify-center">
-        <Button className="bg-blue-600 hover:bg-blue-700 px-8">💾 SAVE SETTINGS</Button>
+        <Button style={{ background: "var(--signal)" }} className="px-8">SAVE SETTINGS</Button>
       </div>
 
       {/* Footer */}

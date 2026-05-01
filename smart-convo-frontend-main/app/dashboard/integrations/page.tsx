@@ -756,12 +756,9 @@ const handleFacebookConnect = async (agentId: number) => {
 
   if (hasTwilioPhones === null) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex items-center justify-center">
+      <div style={{ minHeight: "100vh", background: "var(--canvas)" }} className="flex items-center justify-center">
         <div className="text-center space-y-4">
-          <div className="relative w-20 h-20 mx-auto">
-            <div className="absolute inset-0 border-4 border-slate-200 rounded-full"></div>
-            <div className="absolute inset-0 border-4 border-slate-900 rounded-full border-t-transparent animate-spin"></div>
-          </div>
+          <div style={{ width: 48, height: 48, borderRadius: "50%", border: "3px solid var(--border-1)", borderTopColor: "var(--signal)", animation: "spin 0.8s linear infinite" }} className="mx-auto" />
           <p className="text-slate-600 font-light tracking-wide">Loading integrations...</p>
         </div>
       </div>
@@ -770,14 +767,13 @@ const handleFacebookConnect = async (agentId: number) => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div style={{ minHeight: "100vh", background: "var(--canvas)" }}>
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-white border-b border-slate-200">
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-50/50 via-transparent to-slate-50/50"></div>
-        
+      <div className="relative overflow-hidden border-b" style={{ background: "var(--paper)", borderColor: "var(--border-1)" }}>
+
         <div className="relative max-w-7xl mx-auto px-8 py-16">
           <div className="flex items-center gap-4 mb-8">
-            <div className="w-1 h-20 bg-gradient-to-b from-slate-900 via-slate-400 to-slate-200 rounded-full"></div>
+            <div className="w-1 h-20 rounded-full" style={{ background: "var(--ink)" }}></div>
             <div>
               <h1 className="text-5xl font-extralight tracking-tight text-slate-900 mb-2">
                 Integrations
@@ -792,7 +788,7 @@ const handleFacebookConnect = async (agentId: number) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
             <div className="group bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg hover:border-slate-300 transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-slate-900 group-hover:scale-110 transition-all duration-300">
+                <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center group-hover:bg-[var(--ink)] group-hover:scale-110 transition-all duration-300">
                   <Link2 className="w-6 h-6 text-slate-600 group-hover:text-white transition-colors duration-300" />
                 </div>
               </div>
@@ -800,12 +796,12 @@ const handleFacebookConnect = async (agentId: number) => {
               <p className="text-xs text-slate-500 uppercase tracking-wider font-light">Total Integrations</p>
             </div>
 
-            <div className="group bg-white border border-green-200 rounded-2xl p-6 hover:shadow-lg hover:border-green-300 transition-all duration-300">
+            <div className="group bg-white border border-[var(--border-1)] rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center group-hover:bg-green-500 group-hover:scale-110 transition-all duration-300">
-                  <CheckCircle2 className="w-6 h-6 text-green-600 group-hover:text-white transition-colors duration-300" />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300" style={{ background: "var(--sage-bg)" }}>
+                  <CheckCircle2 className="w-6 h-6" style={{ color: "var(--sage-ink)" }} />
                 </div>
-                <div className="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
+                <div className="px-2 py-1 rounded-full text-xs font-medium" style={{ background: "var(--success-soft)", color: "var(--success)" }}>
                   {totalIntegrations > 0 ? Math.round((connectedCount / totalIntegrations) * 100) : 0}%
                 </div>
               </div>
@@ -813,12 +809,12 @@ const handleFacebookConnect = async (agentId: number) => {
               <p className="text-xs text-slate-500 uppercase tracking-wider font-light">Connected</p>
             </div>
 
-            <div className="group bg-white border border-orange-200 rounded-2xl p-6 hover:shadow-lg hover:border-orange-300 transition-all duration-300">
+            <div className="group bg-white border border-[var(--border-1)] rounded-2xl p-6 hover:shadow-lg transition-all duration-300">
               <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center group-hover:bg-orange-500 group-hover:scale-110 transition-all duration-300">
-                  <XCircle className="w-6 h-6 text-orange-600 group-hover:text-white transition-colors duration-300" />
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-all duration-300" style={{ background: "var(--butter-bg)" }}>
+                  <XCircle className="w-6 h-6" style={{ color: "var(--butter-ink)" }} />
                 </div>
-                <div className="text-xs text-orange-600 font-medium bg-orange-50 px-2 py-1 rounded-full">
+                <div className="px-2 py-1 rounded-full text-xs font-medium" style={{ background: "var(--butter-bg)", color: "var(--butter-ink)" }}>
                   {totalIntegrations > 0 ? Math.round(((totalIntegrations - connectedCount) / totalIntegrations) * 100) : 0}%
                 </div>
               </div>
@@ -833,7 +829,7 @@ const handleFacebookConnect = async (agentId: number) => {
       {hasTwilioPhones && (
         <div className="max-w-7xl mx-auto px-8 py-12">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-slate-50 to-white px-8 py-5 border-b border-slate-200">
+            <div className="px-8 py-5 border-b border-slate-200" style={{ background: "var(--graphite-50)" }}>
               <div className="grid grid-cols-12 gap-4 text-xs font-medium text-slate-600 uppercase tracking-wider">
                 <div className="col-span-4">Integration</div>
                 <div className="col-span-3">Status</div>
@@ -845,7 +841,7 @@ const handleFacebookConnect = async (agentId: number) => {
               {integrations.map((integration, index) => (
                 <div
                   key={index}
-                  className="relative px-8 py-6 hover:bg-slate-50/50 transition-all duration-200 group border-l-4 border-transparent hover:border-slate-300"
+                  className="relative px-8 py-6 hover:bg-slate-50/50 transition-all duration-200 group border-l-4 border-transparent hover:border-[var(--border-2)]"
                 >
                   <div className="grid grid-cols-12 gap-4 items-center">
                     <div className="col-span-4">
@@ -856,20 +852,20 @@ const handleFacebookConnect = async (agentId: number) => {
                         <div>
                           <p className="text-sm font-light text-slate-900">{integration.name}</p>
                           {integration.hasDocumentation && (
-                            <span className="text-xs text-blue-600 font-light">Documentation</span>
+                            <span className="text-xs font-light" style={{ color: "var(--signal-ink)" }}>Documentation</span>
                           )}
                         </div>
                       </div>
                     </div>
 
                     <div className="col-span-3">
-                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-light border ${
-                        integration.status === "Connected" 
-                          ? "bg-green-50 text-green-700 border-green-200"
+                      <span style={
+                        integration.status === "Connected"
+                          ? { background: "var(--success-soft)", color: "var(--success)", border: "1px solid var(--success)", borderRadius: "var(--radius-pill)", padding: "2px 10px", fontSize: 12, fontWeight: 400 }
                           : integration.isKitchenHub
-                          ? "bg-slate-50 text-slate-600 border-slate-200"
-                          : "bg-orange-50 text-orange-700 border-orange-200"
-                      }`}>
+                          ? { background: "var(--graphite-50)", color: "var(--fg-3)", border: "1px solid var(--border-1)", borderRadius: "var(--radius-pill)", padding: "2px 10px", fontSize: 12 }
+                          : { background: "var(--butter-bg)", color: "var(--butter-ink)", border: "1px solid var(--butter-ink)", borderRadius: "var(--radius-pill)", padding: "2px 10px", fontSize: 12, fontWeight: 400 }
+                      }>
                         {integration.status}
                       </span>
                     </div>
@@ -877,7 +873,8 @@ const handleFacebookConnect = async (agentId: number) => {
                     <div className="col-span-5 flex justify-end">
                       {integration.isKitchenHub ? (
                         <button
-                          className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 text-sm font-light flex items-center gap-2"
+                          className="rounded-xl text-sm font-light flex items-center gap-2"
+                          style={{ background: "var(--signal)", color: "white", padding: "8px 16px", border: "none", cursor: "pointer" }}
                           onClick={() => openKitchenHubModal(integration)}
                         >
                           <MapPin className="w-4 h-4" />
@@ -885,7 +882,7 @@ const handleFacebookConnect = async (agentId: number) => {
                         </button>
                       ) : integration.status === "Connected" ? (
                         <button
-                          className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200 text-sm font-light"
+                          style={{ background: "var(--danger)", color: "white", padding: "8px 16px", borderRadius: "var(--radius-md)", border: "none", cursor: "pointer", fontSize: 14, fontWeight: 400 }}
                           onClick={async () => {
                             try {
                               const token = Cookies.get("Token") || ""
@@ -938,7 +935,7 @@ const handleFacebookConnect = async (agentId: number) => {
                         </button>
                       ) : (
                         <button
-                          className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 text-sm font-light"
+                          style={{ background: "var(--signal)", color: "white", padding: "8px 16px", borderRadius: "var(--radius-md)", border: "none", cursor: "pointer", fontSize: 14, fontWeight: 400 }}
                           onClick={() => handleConnect(integration)}
                         >
                           {integration.status === "Not Connected" ? "Connect" : "Reconnect"}
@@ -951,11 +948,6 @@ const handleFacebookConnect = async (agentId: number) => {
             </div>
           </div>
 
-          <div className="mt-16 flex items-center justify-center gap-2">
-            <div className="w-1 h-1 bg-slate-300 rounded-full animate-pulse"></div>
-            <div className="w-1 h-1 bg-slate-300 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-            <div className="w-1 h-1 bg-slate-300 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-          </div>
         </div>
       )}
 
@@ -1023,7 +1015,8 @@ const handleFacebookConnect = async (agentId: number) => {
 
 
                   <button
-                    className="mt-4 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 text-sm font-light"
+                    className="mt-4 rounded-xl text-sm font-light"
+                    style={{ background: "var(--signal)", color: "white", padding: "8px 16px", border: "none", cursor: "pointer" }}
                     onClick={() => saveKitchenHubItem(item)}
                   >
                     Save Changes
@@ -1036,7 +1029,8 @@ const handleFacebookConnect = async (agentId: number) => {
 
           <DialogFooter>
             <button
-              className="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 transition-all duration-200 text-sm font-light"
+              className="rounded-xl text-sm font-light"
+              style={{ background: "var(--graphite-50)", color: "var(--fg-2)", border: "1px solid var(--border-1)", padding: "8px 16px", cursor: "pointer" }}
               onClick={() => setIsKitchenHubModalOpen(false)}
             >
               Close
@@ -1073,7 +1067,7 @@ const handleFacebookConnect = async (agentId: number) => {
                     {agent.persona || "No persona"}
                   </p>
                   <button
-                    className="w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-all duration-200 text-sm font-light"
+                    style={{ background: "var(--signal)", color: "white", width: "100%", padding: "8px 16px", borderRadius: "var(--radius-md)", border: "none", cursor: "pointer", fontSize: 14 }}
                     onClick={() => handleFacebookConnect(agent.id)}
                   >
                     Connect
@@ -1086,7 +1080,8 @@ const handleFacebookConnect = async (agentId: number) => {
 
           <DialogFooter>
             <button
-              className="mt-4 px-4 py-2 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 transition-all duration-200 text-sm font-light"
+              className="mt-4 rounded-xl text-sm font-light"
+              style={{ background: "var(--graphite-50)", color: "var(--fg-2)", border: "1px solid var(--border-1)", padding: "8px 16px", cursor: "pointer" }}
               onClick={() => setIsFacebookModalOpen(false)}
             >
               Close
@@ -1117,10 +1112,10 @@ const handleFacebookConnect = async (agentId: number) => {
 
 
           <DialogFooter className="flex gap-2">
-            <button className="px-4 py-2 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 transition-all duration-200 text-sm font-light" onClick={() => setIsAccesseModalOpen(false)}>
+            <button className="rounded-xl text-sm font-light" style={{ background: "var(--graphite-50)", color: "var(--fg-2)", border: "1px solid var(--border-1)", padding: "8px 16px", cursor: "pointer" }} onClick={() => setIsAccesseModalOpen(false)}>
               Cancel
             </button>
-            <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-all duration-200 text-sm font-light" onClick={handleAccesseSubmit}>
+            <button className="rounded-xl text-sm font-light" style={{ background: "var(--signal)", color: "white", padding: "8px 16px", border: "none", cursor: "pointer" }} onClick={handleAccesseSubmit}>
               Connect
             </button>
           </DialogFooter>

@@ -469,21 +469,21 @@ export default function UploadDocumentsPage() {
   }, [])
 
   return (
-    <div className="max-w-3xl mx-auto p-8 bg-white shadow-md rounded-xl space-y-8 border border-gray-200">
-      <h1 className="text-3xl font-semibold text-gray-800">📁 Upload Documents</h1>
+    <div className="max-w-3xl mx-auto p-8 rounded-xl space-y-8" style={{ background: "var(--paper)", border: "1px solid var(--border-1)", boxShadow: "var(--shadow-sm)" }}>
+      <h1 style={{ fontSize: 28, fontWeight: 300, color: "var(--fg-1)" }}>Upload Documents</h1>
 
       {successMessage && (
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-green-50 border border-green-200 text-green-800 shadow-sm animate-fade-in">
-            <svg className="w-5 h-5 text-green-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <div style={{ background: "var(--success-soft)", border: "1px solid var(--success)", borderRadius: "var(--radius-md)", padding: "12px 16px", display: "flex", alignItems: "center", gap: 12 }} className="animate-fade-in">
+            <svg className="w-5 h-5 shrink-0" style={{ color: "var(--success)" }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             <span className="font-medium">{successMessage}</span>
         </div>
         )}
-    
+
     {errorMessage && (
-        <div className="flex items-center gap-3 p-4 rounded-lg bg-red-50 border border-red-200 text-red-800 shadow-sm animate-fade-in">
-            <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <div style={{ background: "var(--danger-soft)", border: "1px solid var(--danger)", borderRadius: "var(--radius-md)", padding: "12px 16px", display: "flex", alignItems: "center", gap: 12 }} className="animate-fade-in">
+            <svg className="w-5 h-5 shrink-0" style={{ color: "var(--danger)" }} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
             <span className="font-medium">{errorMessage}</span>
@@ -492,27 +492,26 @@ export default function UploadDocumentsPage() {
 
 
       {/* Upload Form */}
-      <div className="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center space-y-4 text-center">
+      <div style={{ background: "var(--graphite-50)", border: "2px dashed var(--border-2)", borderRadius: "var(--radius-lg)", padding: 24, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, textAlign: "center" }}>
         <input
           type="file"
           ref={fileInputRef}
-          className="block text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          className="block text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-light file:bg-[var(--mist-bg)] file:text-[var(--signal-ink)] hover:file:bg-[var(--signal-soft)]"
+          style={{ color: "var(--fg-3)" }}
         />
         <button
           onClick={handleUpload}
           disabled={uploading}
-          className={`inline-flex items-center px-5 py-2.5 rounded-lg text-white font-medium ${
-            uploading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-          } transition duration-200`}
+          style={{ background: uploading ? "var(--signal-soft)" : "var(--signal)", color: uploading ? "var(--signal-ink)" : "white", cursor: uploading ? "not-allowed" : "pointer", padding: "10px 20px", borderRadius: "var(--radius-md)", border: "none", display: "inline-flex", alignItems: "center", gap: 8, fontWeight: 400, fontSize: 14 }}
         >
           {uploading ? (
             <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin" />
               Uploading...
             </>
           ) : (
             <>
-              <UploadCloud className="w-4 h-4 mr-2" />
+              <UploadCloud className="w-4 h-4" />
               Upload Document
             </>
           )}
@@ -521,9 +520,9 @@ export default function UploadDocumentsPage() {
 
       {/* Document List */}
       <div>
-  <h2 className="text-2xl font-medium text-gray-800 mb-4">🗂 Uploaded Files</h2>
+  <h2 style={{ fontSize: 20, fontWeight: 300, color: "var(--fg-1)", marginBottom: 16 }}>Uploaded Files</h2>
   {docs.length === 0 ? (
-    <p className="text-gray-500">No documents uploaded yet.</p>
+    <p style={{ color: "var(--fg-3)" }}>No documents uploaded yet.</p>
   ) : (
     <ul className="space-y-3">
       {docs.map((doc: any) => {
@@ -532,7 +531,8 @@ export default function UploadDocumentsPage() {
         return (
           <li
             key={doc.id}
-            className="flex items-center space-x-3 text-blue-700 hover:underline"
+            className="flex items-center space-x-3"
+            style={{ color: "var(--signal-ink)" }}
           >
             <button
                 onClick={async () => {
@@ -552,15 +552,16 @@ export default function UploadDocumentsPage() {
 
                     const data = await res.json()
                     const url = data.presigned_url
-                    window.open(url, "_blank") 
+                    window.open(url, "_blank")
                     } catch (err) {
                     console.error(err)
                     alert("Could not open the document.")
                     }
                 }}
-                className="flex items-center space-x-2 text-blue-700 hover:underline"
+                className="flex items-center space-x-2 hover:underline"
+                style={{ color: "var(--signal-ink)" }}
                 >
-                <FileText className="w-5 h-5 text-blue-500" />
+                <FileText className="w-5 h-5" style={{ color: "var(--signal-ink)" }} />
                 <span>{doc.title || doc.file_key}</span>
                 </button>
                 {/* <a href={presignedUrl} target="_blank" rel="noopener noreferrer">
