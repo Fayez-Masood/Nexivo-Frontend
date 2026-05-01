@@ -165,7 +165,7 @@ export default function WorkflowsPage() {
     <div className="space-y-12 px-6 py-8">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h2 className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+        <h2 className="text-4xl font-extrabold text-[var(--fg-1)]">
           Workflows
         </h2>
         <p className="text-slate-500">View tools and create workflows seamlessly</p>
@@ -179,7 +179,7 @@ export default function WorkflowsPage() {
             placeholder={`Search by ${searchMode === "name" ? "Tool Name" : "URL"}...`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full rounded-full border border-transparent bg-slate-900/80 text-white placeholder-gray-400 px-5 py-3 pl-12 shadow-[0_0_20px_rgba(59,130,246,0.5)] focus:shadow-[0_0_30px_rgba(99,102,241,0.7)] focus:outline-none transition-all duration-300"
+            className="w-full rounded-full border border-[var(--border-1)] bg-[var(--paper)] text-[var(--fg-1)] placeholder-gray-400 px-5 py-3 pl-12 focus:outline-none transition-all duration-300"
           />
           <Search className="absolute left-4 top-3.5 text-gray-400 w-5 h-5" />
         </div>
@@ -212,9 +212,10 @@ export default function WorkflowsPage() {
             size="sm"
             className={
               methodFilter === m
-                ? "bg-black text-white hover:bg-gray-800"
-                : "bg-white text-gray-700 border hover:bg-gray-100"
+                ? "text-[var(--canvas)]"
+                : "text-[var(--fg-1)] border border-[var(--border-1)] hover:bg-[var(--graphite-50)]"
             }
+            style={methodFilter === m ? { background: "var(--ink)" } : undefined}
             onClick={() => setMethodFilter(m)}
           >
             {m}
@@ -413,7 +414,7 @@ export default function WorkflowsPage() {
             </div>
 
             <Button
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
+              className="w-full text-white" style={{ background: "var(--signal)" }}
               onClick={handleSubmitWorkflow}
             >
               Create Workflow

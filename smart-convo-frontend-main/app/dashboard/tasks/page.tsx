@@ -62,10 +62,10 @@ const LogDetailModal = ({ log, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ animation: 'fadeIn 0.2s ease-out' }}>
-      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onClick={onClose} />
+      <div className="absolute inset-0 backdrop-blur-md" style={{ background: "rgba(10,10,10,0.5)" }} onClick={onClose} />
       
       <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl" style={{ animation: 'slideUp 0.3s ease-out' }}>
-        <div className={`relative bg-gradient-to-r ${getActionGradient(log.action)} px-8 py-8 text-white`}>
+        <div className="relative px-8 py-8 text-white" style={{ background: "var(--ink)" }}>
           <div className="absolute inset-0 bg-black/10"></div>
           
           <button
@@ -97,7 +97,7 @@ const LogDetailModal = ({ log, onClose }) => {
         </div>
 
         <div className="p-8 space-y-6">
-          <div className="bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border border-slate-200">
+          <div style={{ background: "var(--paper)", borderRadius: "var(--radius-lg)", padding: 24, border: "1px solid var(--border-1)" }}>
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-1">
                 <FileText className="w-5 h-5 text-slate-600" />
@@ -157,7 +157,7 @@ const LogDetailModal = ({ log, onClose }) => {
           {log.changes && Object.keys(log.changes).length > 0 && (
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <div className="w-1 h-6 bg-gradient-to-b from-slate-900 to-slate-400 rounded-full"></div>
+                <div className="w-1 h-6 bg-[var(--ink)] rounded-full"></div>
                 <h3 className="text-lg font-light text-slate-900">Changes Made</h3>
               </div>
 
@@ -166,7 +166,7 @@ const LogDetailModal = ({ log, onClose }) => {
                   const diff = highlightDifferences(change.old, change.new)
                   
                   return (
-                    <div key={field} className="bg-gradient-to-r from-slate-50 to-white rounded-2xl p-6 border border-slate-200">
+                    <div key={field} style={{ background: "var(--graphite-50)", borderRadius: "var(--radius-lg)", padding: 24, border: "1px solid var(--border-1)" }}>
                       <div className="mb-4 flex items-center justify-between">
                         <Badge className="bg-slate-100 text-slate-700 border-0 font-mono text-xs">
                           {field}
@@ -184,7 +184,7 @@ const LogDetailModal = ({ log, onClose }) => {
                             <div className="w-2 h-2 bg-rose-400 rounded-full"></div>
                             <p className="text-xs text-slate-500 uppercase tracking-wider font-medium">Previous</p>
                           </div>
-                          <div className={`rounded-xl p-4 border-2 ${diff.hasDiff ? 'bg-rose-50 border-rose-300' : 'bg-slate-50 border-slate-200'}`}>
+                          <div className={`rounded-xl p-4 border-2 ${diff.hasDiff ? '' : 'bg-slate-50 border-slate-200'}`} style={diff.hasDiff ? { background: "var(--danger-soft)", border: "2px solid var(--danger)" } : undefined}>
                             <pre className={`text-sm font-mono overflow-x-auto whitespace-pre-wrap break-words ${diff.hasDiff ? 'text-rose-900 font-medium' : 'text-slate-600'}`}>
                               {formatValue(change.old)}
                             </pre>
@@ -196,7 +196,7 @@ const LogDetailModal = ({ log, onClose }) => {
                             <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
                             <p className="text-xs text-slate-500 uppercase tracking-wider font-medium">Current</p>
                           </div>
-                          <div className={`rounded-xl p-4 border-2 ${diff.hasDiff ? 'bg-emerald-50 border-emerald-300' : 'bg-slate-50 border-slate-200'}`}>
+                          <div className={`rounded-xl p-4 border-2 ${diff.hasDiff ? '' : 'bg-slate-50 border-slate-200'}`} style={diff.hasDiff ? { background: "var(--success-soft)", border: "2px solid var(--success)" } : undefined}>
                             <pre className={`text-sm font-mono overflow-x-auto whitespace-pre-wrap break-words ${diff.hasDiff ? 'text-emerald-900 font-medium' : 'text-slate-600'}`}>
                               {formatValue(change.new)}
                             </pre>
